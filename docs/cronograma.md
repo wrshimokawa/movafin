@@ -1,14 +1,14 @@
 # Cronograma de Desenvolvimento - MovaFin
 
-Este documento apresenta o cronograma de desenvolvimento do MovaFin, atualizado conforme as especificações detalhadas e o protótipo de alta fidelidade já construídos.
+Este documento apresenta o cronograma de desenvolvimento do MovaFin, atualizado conforme as especificações detalhadas e o progresso atual do protótipo.
 
 ## 🏁 Fase de Definição e Prototipagem (Concluída)
 - Definição de PRD, Requisitos Funcionais, Não Funcionais e Legais.
 - Criação do Diagrama de Arquitetura e Casos de Uso.
-- Desenvolvimento do Protótipo de Alta Fidelidade (UI) com filtragem e validações.
-- Implementação inicial dos fluxos de IA (Genkit) e componentes explicadores.
+- Desenvolvimento da UI funcional com ShadCN e Tailwind (Dashboard, Contas, Transações, Metas).
+- Implementação dos fluxos de IA (Genkit) e componentes `AiExplainer` e `AiCategorySuggester`.
 
-## Sprint 1: Fundação e Autenticação Real
+## Sprint 1: Fundação e Autenticação Real (Em Andamento)
 - **Objetivo:** Transformar a autenticação mockada em um sistema real e seguro.
 - **Tarefas:**
     - Configuração do projeto no Firebase Console.
@@ -35,7 +35,7 @@ Este documento apresenta o cronograma de desenvolvimento do MovaFin, atualizado 
 ## Sprint 4: Inteligência Artificial e Dashboard Real
 - **Objetivo:** Validar as funcionalidades de IA com dados reais e consolidar o resumo visual.
 - **Tarefas:**
-    - Testes e refinamento do "Explicador de Transações" com dados do Firestore (RF-017).
+    - Refinamento do "Explicador de Transações" com dados do Firestore (RF-017).
     - Refinamento do "Sugeridor de Categorias" no formulário de transação (RF-018).
     - Popular o Dashboard principal com agregações reais do Firestore (RF-008, RF-016).
 

@@ -15,11 +15,10 @@ Este documento detalha as interações entre os atores e o sistema MovaFin, desc
 ### UC-01: Gerenciar Autenticação
 - **Atores:** Usuário Não Autenticado, Usuário Autenticado, Administrador.
 - **Resumo:** Permite o acesso seguro à plataforma, criação de novas contas e encerramento de sessão.
-- **Pré-condições:** Nenhuma.
 - **Fluxo Principal (Login):**
     1. O ator acessa a página de login.
     2. O ator fornece e-mail e senha.
-    3. O sistema valida as credenciais contra a base de dados do Firebase Auth.
+    3. O sistema valida as credenciais contra o Firebase Auth.
     4. O sistema verifica se existem Custom Claims (ex: admin).
     5. O sistema concede acesso e redireciona para o Dashboard apropriado.
 - **Fluxos Alternativos:**
@@ -33,71 +32,58 @@ Este documento detalha as interações entre os atores e o sistema MovaFin, desc
 ### UC-02: Gerenciar Contas Financeiras
 - **Atores:** Usuário Autenticado.
 - **Resumo:** Permite o controle das fontes de recursos (bancos, carteira, poupança).
-- **Pré-condições:** Nenhuma.
 - **Fluxo Principal (Criação):**
     1. O usuário acessa a seção de Contas.
     2. O usuário aciona "Adicionar Conta".
     3. O usuário preenche nome, tipo de conta e saldo inicial.
-    4. O sistema persiste os dados e atualiza o saldo consolidado.
+    4. O sistema persiste os dados no Firestore vinculados ao UID do usuário.
 - **Fluxos Alternativos:**
-    - **A1 (Navegação):** O usuário clica em uma conta existente; o sistema redireciona para a lista de transações filtrada por aquela conta.
+    - **A1 (Navegação):** O usuário clica em uma conta; o sistema redireciona para `/dashboard/transactions?accountId={id}`.
 - **Regras de Negócio:**
-    - **RN-03:** O saldo inicial não pode ser negativo no momento da criação.
+    - **RN-03:** O saldo inicial não deve ser negativo na criação da conta.
 
 ### UC-03: Gerenciar Transações
 - **Atores:** Usuário Autenticado.
 - **Resumo:** Registro e monitoramento de entradas e saídas financeiras.
-- **Pré-condições:** Existência de pelo menos uma Conta cadastrada.
 - **Fluxo Principal:**
     1. O usuário aciona "Nova Transação".
-    2. O usuário define o tipo (Receita/Despesa), valor, conta de origem/destino e categoria.
-    3. O sistema atualiza o saldo da conta associada em tempo real.
+    2. O usuário preenche: tipo (Receita/Despesa), valor, conta, categoria e data.
+    3. O sistema atualiza o saldo da conta e persiste o registro no Firestore.
 - **Fluxos Alternativos:**
-    - **A1 (Sugestão de Categoria):** O usuário solicita sugestão à IA baseada na descrição; a IA retorna até 3 opções.
-    - **A2 (Explicação de Transação):** O usuário solicita esclarecimento de um jargão bancário; a IA retorna uma explicação simples.
-- **Fluxos de Exceção:**
-    - **E1 (Conta não selecionada):** O sistema impede o salvamento até que uma conta válida seja escolhida.
+    - **A1 (Sugestão de Categoria):** O usuário solicita sugestão à IA baseada na descrição; o sistema usa Genkit para retornar opções.
+    - **A2 (Explicação de Transação):** O usuário usa o `AiExplainer` para traduzir jargões bancários.
 - **Regras de Negócio:**
-    - **RN-04:** Transações do tipo despesa devem subtrair do saldo; receitas devem somar.
+    - **RN-04:** Despesas subtraem do saldo; receitas somam.
 
 ### UC-04: Gerenciar Categorias
 - **Atores:** Usuário Autenticado.
-- **Resumo:** Personalização das etiquetas de classificação de gastos e ganhos.
-- **Pré-condições:** Nenhuma.
+- **Resumo:** Personalização das etiquetas de classificação.
 - **Fluxo Principal:**
     1. O usuário acessa a página de Categorias.
-    2. O usuário adiciona uma nova categoria definindo se ela se aplica a Receitas, Despesas ou Ambos.
+    2. O usuário adiciona ou edita categorias de lançamentos ou tipos de conta.
 - **Regras de Negócio:**
-    - **RN-05:** Categorias nativas do sistema não podem ser excluídas pelo usuário.
+    - **RN-05:** Categorias pré-definidas do sistema são protegidas contra exclusão.
 
 ### UC-05: Gerenciar Metas Financeiras
 - **Atores:** Usuário Autenticado.
 - **Resumo:** Planejamento de objetivos de médio/longo prazo.
-- **Pré-condições:** Nenhuma.
 - **Fluxo Principal:**
-    1. O usuário define um nome para a meta, valor alvo e data limite.
+    1. O usuário define nome, valor alvo e data limite.
     2. O sistema calcula o progresso percentual baseado no valor atual economizado.
-- **Fluxos de Exceção:**
-    - **E1 (Data Inválida):** O sistema impede a criação se a data alvo for anterior à data atual.
 - **Regras de Negócio:**
-    - **RN-06:** O valor alvo deve ser estritamente maior que o valor já acumulado.
+    - **RN-06:** O valor alvo deve ser maior que o valor já acumulado.
 
 ### UC-06: Consultar Dashboard
 - **Atores:** Usuário Autenticado.
 - **Resumo:** Visão consolidada da saúde financeira.
-- **Pré-condições:** Existência de dados de contas e transações para exibição significativa.
 - **Fluxo Principal:**
-    1. O sistema agrega saldos de todas as contas para exibir o "Saldo Total".
-    2. O sistema filtra transações do mês corrente para exibir "Receitas" e "Despesas".
-    3. O sistema gera gráfico de pizza/barras com a distribuição por categorias.
+    1. O sistema exibe o saldo total consolidado.
+    2. O sistema gera gráficos de Recharts baseados nas transações do mês.
 
 ### UC-07: Acessar Painel Administrativo
 - **Atores:** Administrador.
 - **Resumo:** Supervisão de métricas globais da plataforma.
-- **Pré-condições:** Ator deve possuir privilégios administrativos atribuídos manualmente via backend.
 - **Fluxo Principal:**
     1. O administrador acessa a rota `/admin`.
-    2. O sistema valida os privilégios no token de acesso.
-    3. O sistema exibe volumetria de usuários e transações de forma anonimizada.
-- **Regras de Negócio:**
-    - **RN-07:** Dados sensíveis e transações individuais de usuários nunca devem ser visíveis no painel administrativo.
+    2. O sistema valida os privilégios no Firestore/Custom Claims.
+    3. O sistema exibe métricas agregadas anonimizadas.

@@ -1,45 +1,38 @@
 # Requisitos Funcionais do MovaFin
 
-Este documento detalha os requisitos funcionais da aplicação MovaFin, mapeados para os Casos de Uso correspondentes.
+Este documento detalha os requisitos funcionais da aplicação MovaFin.
 
 ## 1. Gestão de Usuários e Autenticação (UC-01)
-
-- **RF-001: Cadastro de Usuário:** O sistema deve permitir que um novo usuário se cadastre fornecendo nome completo, e-mail e senha.
-- **RF-002: Login de Usuário:** O sistema deve permitir que um usuário existente faça login usando seu e-mail e senha.
-- **RF-003: Sessão Segura:** O sistema deve manter a sessão do usuário de forma segura via Firebase Auth.
-- **RF-004: Isolamento de Dados:** Os dados de cada usuário devem ser estritamente isolados através de Security Rules no Firestore.
-- **RF-023: Identificação de Administrador:** O sistema deve identificar usuários com privilégios administrativos através de Custom Claims.
+- **RF-001: Cadastro de Usuário:** O sistema deve permitir que um novo usuário se cadastre.
+- **RF-002: Login de Usuário:** O sistema deve permitir o login via e-mail/senha.
+- **RF-003: Sessão Segura:** Manutenção de sessão via Firebase Auth.
+- **RF-004: Isolamento de Dados:** Dados isolados via Security Rules no Firestore.
+- **RF-023: Identificação de Administrador:** Identificação via Custom Claims ou coleção de roles.
 
 ## 2. Gestão de Contas Financeiras (UC-02)
-
-- **RF-005: Criação de Contas:** O usuário deve poder criar múltiplas contas financeiras (corrente, poupança, etc.).
-- **RF-006: Edição de Contas:** O usuário deve poder editar nome, tipo e saldo inicial de suas contas.
-- **RF-007: Visualização de Contas:** O usuário deve poder visualizar uma lista de todas as suas contas com seus respectivos saldos.
-- **RF-008: Saldo Consolidado:** O sistema deve exibir o saldo total consolidado na tela principal.
-- **RF-022: Atalho para Transações:** Ao selecionar uma conta na visualização de contas, o sistema deve navegar para as transações filtradas daquela conta.
+- **RF-005: Criação de Contas:** Criação de múltiplas contas (corrente, poupança, etc.).
+- **RF-006: Edição de Contas:** Alteração de nome, tipo e saldo.
+- **RF-007: Visualização de Contas:** Listagem com saldos individuais.
+- **RF-008: Saldo Consolidado:** Exibição do total geral no dashboard.
+- **RF-022: Atalho para Transações:** Navegação para transações filtradas ao clicar em uma conta.
 
 ## 3. Gestão de Transações (UC-03)
-
-- **RF-009: Registro de Transação:** O usuário deve poder registrar novas transações (receitas ou despesas).
-- **RF-010: Adição de Anexos:** O usuário deve poder anexar arquivos (comprovantes) a uma transação (armazenados no Firebase Storage).
-- **RF-013: Listagem e Filtragem de Transações:** O usuário deve poder filtrar por Tipo (Receita/Despesa), Conta e Período.
-- **RF-017: Explicador de Transações (IA):** Ferramenta que explica termos financeiros complexos usando Genkit.
-- **RF-018: Sugestão de Categoria (IA):** O sistema deve sugerir categorias relevantes para uma transação baseada na descrição.
+- **RF-009: Registro de Transação:** Cadastro de receitas e despesas.
+- **RF-010: Adição de Anexos:** Upload de comprovantes (Firebase Storage).
+- **RF-013: Listagem e Filtragem:** Filtros por tipo, conta e período.
+- **RF-017: Explicador de Transações (IA):** Tradução de jargões via Genkit.
+- **RF-018: Sugestão de Categoria (IA):** Sugestão automática baseada na descrição.
 
 ## 4. Categorização (UC-04)
-
-- **RF-014: Gestão de Categorias:** O usuário deve poder criar e editar categorias personalizadas para seus lançamentos.
-- **RF-024: Tipos de Conta Personalizados:** O usuário deve poder gerenciar os tipos de conta disponíveis.
+- **RF-014: Gestão de Categorias:** Criação e edição de categorias personalizadas.
+- **RF-024: Tipos de Conta Personalizados:** Gestão dos tipos de conta disponíveis.
 
 ## 5. Dashboard (UC-06)
-
-- **RF-016: Painel Visual:** O sistema deve apresentar gráficos de gastos por categoria e resumos mensais.
+- **RF-016: Painel Visual:** Gráficos de gastos e resumos mensais (Recharts).
 
 ## 6. Gestão de Metas (UC-05)
-
-- **RF-019: Criação de Metas:** O usuário deve poder criar metas financeiras com valor alvo e data limite.
-- **RF-020: Acompanhamento de Progresso:** O sistema deve calcular automaticamente o percentual atingido da meta.
+- **RF-019: Criação de Metas:** Definição de valor alvo e data limite.
+- **RF-020: Acompanhamento de Progresso:** Cálculo automático do percentual atingido.
 
 ## 7. Administração (UC-07)
-
-- **RF-021: Painel Administrativo:** Acesso exclusivo para administradores para visualização de métricas agregadas da plataforma.
+- **RF-021: Painel Administrativo:** Visualização de métricas globais anonimizadas.
