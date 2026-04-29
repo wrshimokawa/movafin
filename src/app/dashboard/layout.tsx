@@ -20,7 +20,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     <SidebarProvider>
       <Sidebar>
         <SidebarHeader>
-          <Logo />
+          <Logo className="text-sidebar-foreground px-2 py-4" />
         </SidebarHeader>
         <SidebarContent>
           <MainNav />

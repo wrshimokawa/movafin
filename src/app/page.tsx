@@ -6,7 +6,7 @@ export default function LandingPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <header className="p-4 flex justify-between items-center">
-        <Logo />
+        <Logo className="text-primary" />
         <div className="flex items-center gap-4">
           <Button variant="ghost" asChild>
             <Link href="/login">Entrar</Link>
