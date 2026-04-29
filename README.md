@@ -17,7 +17,7 @@ MovaFin é uma aplicação web moderna e intuitiva, projetada para ajudar usuár
 - **Framework:** Next.js (App Router)
 - **UI:** React, TypeScript, ShadCN UI, Tailwind CSS
 - **Inteligência Artificial:** Google Genkit
-- **Backend:** Firebase (Authentication, Firestore)
+- **Backend:** Firebase (Authentication, Firestore, Storage)
 
 ## 🏃 Getting Started
 
