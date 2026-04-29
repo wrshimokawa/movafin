@@ -1,10 +1,16 @@
+
 'use client';
 
 import { firebaseConfig } from '@/firebase/config';
 import { initializeApp, getApps, getApp, FirebaseApp } from 'firebase/app';
-import { getAuth, connectAuthEmulator } from 'firebase/auth';
-import { getFirestore, connectFirestoreEmulator } from 'firebase/firestore'
+import { getAuth } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
+/**
+ * Inicializa os SDKs do Firebase.
+ * No ambiente do Firebase Studio, utilizamos diretamente os serviços na nuvem (Produção)
+ * para evitar problemas de conectividade com endpoints de emuladores em portas encaminhadas.
+ */
 export function initializeFirebase() {
   if (!getApps().length) {
     let firebaseApp;
@@ -16,20 +22,8 @@ export function initializeFirebase() {
     }
 
     const sdks = getSdks(firebaseApp);
-
-    // Configuração para uso de emuladores em ambiente de desenvolvimento local
-    if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true') {
-      try {
-        connectAuthEmulator(sdks.auth, 'http://127.0.0.1:9099');
-        connectFirestoreEmulator(sdks.firestore, '127.0.0.1', 8080);
-        console.log('%c MovaFin: Conectado aos Emuladores Firebase (Auth: 9099, Firestore: 8080) ', 'background: #4D3399; color: #fff; font-weight: bold;');
-      } catch (err) {
-        console.warn('MovaFin: Falha ao conectar aos Emuladores Firebase. Verifique se estão rodando.', err);
-      }
-    } else {
-      console.log('%c MovaFin: Conectado ao Firebase Cloud (Produção) ', 'background: #5A7EED; color: #fff; font-weight: bold;');
-    }
-
+    console.log('%c MovaFin: Conectado ao Firebase Cloud (Produção) ', 'background: #5A7EED; color: #fff; font-weight: bold;');
+    
     return sdks;
   }
 
