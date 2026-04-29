@@ -4,9 +4,7 @@ Este documento detalha os casos de uso da aplicação MovaFin, descrevendo as in
 
 ## Diagrama de Casos de Uso
 
-A imagem abaixo ilustra as principais funcionalidades e quem as executa.
-
-![Diagrama de Casos de Uso](./usecases.png)
+**Nota:** O diagrama de imagem (`usecases.png`) pode ser gerado a partir do código-fonte em `docs/usecases.uml` usando um renderizador PlantUML online.
 
 ---
 
@@ -78,7 +76,7 @@ A seguir, a especificação detalhada de cada caso de uso.
 - **Pré-condições:** O usuário deve possuir pelo menos uma conta financeira cadastrada.
 - **Fluxo Principal (Registrar Transação):**
     1. O usuário navega para a seção "Transações" e clica em "Adicionar Transação".
-    2. O sistema exibe um formulário solicitando: Descrição, Valor, Tipo (Receita/Despesa), Categoria, Conta, Data, Notas (opcional) e Anexo (opcional).
+    2. O sistema exibe um formulário solicitando: Descrição, Valor, Tipo (Receita/Despesa), Categoria, Conta, Data, Notas (opcional) и Anexo (opcional).
     3. O usuário preenche as informações e salva.
     4. O sistema valida os dados e cria a nova transação.
     5. O sistema atualiza o saldo da conta associada.

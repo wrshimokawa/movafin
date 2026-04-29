@@ -2,16 +2,16 @@ import { cn } from "@/lib/utils";
 
 export function AppIcon({ className }: { className?: string }) {
   return (
-    <svg
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
+    <svg 
+      width="24" 
+      height="24" 
+      viewBox="0 0 24 24" 
+      fill="none" 
       xmlns="http://www.w3.org/2000/svg"
       className={className}
     >
-      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M9 15V9L12 12L15 9V15" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+        <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" fill="hsl(var(--primary))" stroke="hsl(var(--primary))" strokeWidth="2" strokeLinejoin="round"/>
+        <path d="M9 17V7L12 11.5L15 7V17" stroke="hsl(var(--primary-foreground))" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
     </svg>
   );
 }
