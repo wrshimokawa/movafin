@@ -24,3 +24,11 @@
 - **Icons:** Use a set of simple, clear, and modern line icons that intuitively represent financial concepts like accounts, transactions, and categories, ensuring universal understanding.
 - **Layout:** A responsive, mobile-first design with a clean, card-based layout for financial summaries and transaction listings. Generous white space will be used to reduce visual clutter and improve comprehension for new users.
 - **Animations:** Implement subtle and purposeful animations for state changes, data loading, and interactive feedback, enhancing user experience without causing distraction or slow-downs.
+
+## 4. Detailed Documentation
+
+For a more detailed breakdown of the project requirements, please refer to the following documents:
+
+- **[Functional Requirements](./functional-requirements.md):** Describes what the system should do.
+- **[Non-Functional Requirements](./non-functional-requirements.md):** Defines the quality attributes and constraints of the system.
+- **[Legal and Compliance Requirements](./legal-requirements.md):** Outlines the legal and regulatory obligations.
