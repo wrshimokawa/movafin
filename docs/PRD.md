@@ -30,8 +30,8 @@
 Refer to the following documents for deep technical specifications:
 
 - **[Functional Requirements](./functional-requirements.md):** Detailed list of RFs.
-- **[Use Cases](./usecases.md):** Flow specifications and business rules (Referencing `usecases.png`).
+- **[Use Cases](./usecases.md):** Flow specifications and business rules.
 - **[Non-Functional Requirements](./non-functional-requirements.md):** Performance, security, and usability constraints.
-- **[Development Schedule](./cronograma.md):** Project roadmap and sprints.
-- **[Architecture](./architecture.svg):** Visual system architecture.
 - **[Legal and Compliance](./legal-requirements.md):** Privacy policy and terms of service.
+- **[Development Schedule](./cronograma.md):** Project roadmap and sprints.
+- **[Admin Setup Guide](./admin-setup.md):** Step-by-step for the first administrative user.
