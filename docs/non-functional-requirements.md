@@ -17,8 +17,8 @@ Este documento descreve os requisitos não funcionais (RNF) da aplicação MovaF
 - **Criptografia:** Todo tráfego via HTTPS (TLS 1.2+).
 
 ## 4. Ambiente e Infraestrutura (RNF-007)
-- **Desenvolvimento Local:** Suporte a Firebase Local Emulator Suite para testes isolados.
-- **Produção:** Infraestrutura serverless baseada em Google Cloud/Firebase App Hosting.
+- **Desenvolvimento Local:** Suporte a Firebase Local Emulator Suite para testes isolados e desenvolvimento offline.
+- **Produção:** Infraestrutura serverless baseada em Google Cloud/Firebase App Hosting para escalabilidade e alta disponibilidade.
 - **Isolamento de Ambientes:** Separação clara entre ambiente local e nuvem via variáveis de ambiente (`NEXT_PUBLIC_USE_FIREBASE_EMULATORS`).
 
 ## 5. Confiabilidade (RNF-004)

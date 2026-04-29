@@ -20,13 +20,14 @@ export function initializeFirebase() {
     const sdks = getSdks(firebaseApp);
 
     // Configuração para uso de emuladores em ambiente de desenvolvimento local
+    // Habilitado via variável de ambiente NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true
     if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true') {
       try {
         connectAuthEmulator(sdks.auth, 'http://127.0.0.1:9099');
         connectFirestoreEmulator(sdks.firestore, '127.0.0.1', 8080);
-        console.log('Firebase Emulators connected (Auth: 9099, Firestore: 8080)');
+        console.log('MovaFin: Conectado aos Emuladores Firebase (Auth: 9099, Firestore: 8080)');
       } catch (err) {
-        console.warn('Failed to connect to Firebase Emulators:', err);
+        console.warn('MovaFin: Falha ao conectar aos Emuladores Firebase. Verifique se estão rodando.', err);
       }
     }
 

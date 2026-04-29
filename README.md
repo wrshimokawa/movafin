@@ -15,33 +15,34 @@ MovaFin é uma aplicação web moderna e intuitiva, projetada para ajudar usuár
 
 ### 1. Requisitos
 - Node.js 18+
-- Firebase CLI (para emuladores locais)
+- Firebase CLI: `npm install -g firebase-tools`
 
 ### 2. Instalação
 ```bash
 npm install
 ```
 
-### 3. Desenvolvimento Local com Emuladores (Opcional)
-Para evitar custos e poluição de dados em produção durante o desenvolvimento, você pode usar os Emuladores do Firebase:
+### 3. Desenvolvimento Local (Emuladores)
+Para desenvolver sem afetar os dados de produção e sem custos:
 
-1. Certifique-se de ter o Firebase CLI instalado: `npm install -g firebase-tools`
-2. No arquivo `.env`, defina:
+1. No arquivo `.env`, certifique-se de que:
    ```
    NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true
    ```
-3. Inicie os emuladores (em um terminal separado):
+2. Inicie os emuladores em um terminal separado:
    ```bash
    firebase emulators:start
    ```
+3. O app se conectará automaticamente ao Firestore e Auth locais.
 
-### 4. Rodar o App
-```bash
-npm run dev
-```
+### 4. Produção
+Para conectar ao banco de dados na nuvem:
+1. Altere no `.env`: `NEXT_PUBLIC_USE_FIREBASE_EMULATORS=false`
+2. Rode o app normalmente: `npm run dev`
 
 ## 🏛️ Documentação
 
-- [Product Requirements Document (PRD)](./docs/PRD.md)
-- [Especificação de Casos de Uso](./docs/usecases.md)
+- [PRD - Product Requirements](./docs/PRD.md)
+- [Casos de Uso](./docs/usecases.md)
 - [Configuração de Administrador](./docs/admin-setup.md)
+- [Requisitos Não Funcionais](./docs/non-functional-requirements.md)
