@@ -31,7 +31,7 @@ note right of UC3
   Explicação com IA (Genkit)
 end note
 
-note bottom of UC7
+note right of UC7
   Acesso restrito via
   Custom Claims/Firestore Flag
 end note
