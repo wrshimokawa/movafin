@@ -15,7 +15,7 @@ Este documento detalha as interações entre os atores e o sistema MovaFin, desc
 ### UC-01: Gerenciar Autenticação
 - **Atores:** Usuário Não Autenticado, Usuário Autenticado, Administrador.
 - **Resumo:** Permite o acesso seguro à plataforma, criação de novas contas e encerramento de sessão.
-- **Pré-condições:** O ator deve ter acesso à internet e possuir um e-mail válido para cadastro.
+- **Pré-condições:** O ator deve possuir um e-mail válido para cadastro.
 - **Pós-condições:** O ator é autenticado no sistema com acesso aos seus dados privados ou uma mensagem de erro clara é exibida.
 - **Fluxo Principal (Login):**
     1. O ator acessa a página de login.
@@ -36,7 +36,7 @@ Este documento detalha as interações entre os atores e o sistema MovaFin, desc
 ### UC-02: Gerenciar Contas Financeiras
 - **Atores:** Usuário Autenticado.
 - **Resumo:** Controle das fontes de recursos (bancos, carteira, investimentos).
-- **Pré-condições:** Usuário deve estar autenticado.
+- **Pré-condições:** Nenhuma.
 - **Pós-condições:** A conta é persistida e o saldo consolidado do usuário é atualizado.
 - **Fluxo Principal:**
     1. O usuário acessa "Contas".
@@ -50,7 +50,7 @@ Este documento detalha as interações entre os atores e o sistema MovaFin, desc
 ### UC-03: Gerenciar Transações
 - **Atores:** Usuário Autenticado.
 - **Resumo:** Registro e monitoramento de entradas e saídas financeiras.
-- **Pré-condições:** Usuário autenticado e deve possuir pelo menos uma conta cadastrada.
+- **Pré-condições:** O usuário deve possuir pelo menos uma conta cadastrada.
 - **Pós-condições:** Transação registrada, saldo da conta afetada atualizado e categoria vinculada.
 - **Fluxo Principal:**
     1. O usuário aciona "Nova Transação".
@@ -65,7 +65,7 @@ Este documento detalha as interações entre os atores e o sistema MovaFin, desc
 ### UC-04: Gerenciar Categorias
 - **Atores:** Usuário Autenticado.
 - **Resumo:** Personalização das etiquetas de classificação de gastos e ganhos.
-- **Pré-condições:** Usuário autenticado.
+- **Pré-condições:** Nenhuma.
 - **Pós-condições:** Novas categorias ficam disponíveis para seleção em transações.
 - **Fluxo Principal:**
     1. O usuário acessa a página de Categorias.
@@ -76,7 +76,7 @@ Este documento detalha as interações entre os atores e o sistema MovaFin, desc
 ### UC-05: Gerenciar Metas Financeiras
 - **Atores:** Usuário Autenticado.
 - **Resumo:** Planejamento de objetivos financeiros com prazo e valor.
-- **Pré-condições:** Usuário autenticado.
+- **Pré-condições:** Nenhuma.
 - **Pós-condições:** Meta criada com cálculo automático de progresso baseado no valor acumulado.
 - **Fluxo Principal:**
     1. O usuário define nome, valor alvo e data limite.
@@ -88,7 +88,7 @@ Este documento detalha as interações entre os atores e o sistema MovaFin, desc
 ### UC-06: Consultar Dashboard
 - **Atores:** Usuário Autenticado.
 - **Resumo:** Visão agregada da saúde financeira através de gráficos e métricas.
-- **Pré-condições:** Usuário autenticado e com dados cadastrados (opcional).
+- **Pré-condições:** O usuário deve possuir dados cadastrados para visualização completa de métricas (opcional).
 - **Pós-condições:** Exibição de gráficos de pizza/barra e saldos totais.
 - **Regras de Negócio:**
     - **RN-07:** O saldo total é a soma algébrica de todas as contas do usuário.
@@ -96,7 +96,7 @@ Este documento detalha as interações entre os atores e o sistema MovaFin, desc
 ### UC-07: Acessar Painel Administrativo
 - **Atores:** Administrador.
 - **Resumo:** Visualização de estatísticas globais e manutenção do sistema.
-- **Pré-condições:** Usuário deve possuir o claim `admin: true` ou estar na lista de `roles_admin`.
+- **Pré-condições:** O usuário deve possuir privilégios administrativos atribuídos previamente.
 - **Pós-condições:** Acesso a dados agregados anonimizados.
 - **Regras de Negócio:**
     - **RN-08:** O administrador nunca deve visualizar dados sensíveis (descrições de transações) de usuários individuais, apenas dados agregados.
