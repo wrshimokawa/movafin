@@ -1,75 +1,103 @@
-
 # Casos de Uso - MovaFin
 
-Este documento detalha os casos de uso da aplicação MovaFin, descrevendo as interações entre os atores (usuários) e o sistema.
+Este documento detalha as interações entre os atores e o sistema MovaFin, descrevendo os fluxos de trabalho e as regras que regem cada funcionalidade.
 
 ## Diagrama de Casos de Uso
 
-**Nota:** O diagrama de imagem (`usecases.png`) pode ser gerado a partir do código-fonte em `docs/usecases.uml` usando um renderizador PlantUML online.
+![Diagrama de Casos de Uso](./usecases.png)
+
+*Nota: O diagrama acima é gerado a partir do código PlantUML presente em `docs/usecases.uml`.*
 
 ---
 
 ## Especificação dos Casos de Uso
 
 ### UC-01: Gerenciar Autenticação
-- **Atores:** Usuário Não Autenticado, Usuário Autenticado, Administrador
-- **Resumo:** Permite que um usuário crie uma nova conta, acesse uma conta existente ou encerre sua sessão no sistema.
-- **Pré-condições:** Nenhuma para Cadastro e Login. Para acesso administrativo, o usuário deve ter sido previamente promovido a Administrador por um processo de governança manual/interno (Custom Claims).
+- **Atores:** Usuário Não Autenticado, Usuário Autenticado, Administrador.
+- **Resumo:** Permite o acesso seguro à plataforma, criação de novas contas e encerramento de sessão.
+- **Pré-condições:** Nenhuma.
 - **Fluxo Principal (Login):**
-    1. O Usuário acessa a página de "Login".
-    2. O Usuário preenche os campos "Email" e "Senha".
-    3. O Usuário clica no botão "Entrar".
-    4. O Sistema valida as credenciais.
-    5. O Sistema verifica as permissões do usuário no token de acesso.
-    6. Se for um usuário comum, redireciona para o "Dashboard" padrão.
-    7. Se possuir o atributo de administrador (Custom Claim), habilita o acesso ao menu "Admin" e redireciona conforme preferência.
-- **Pós-condição:** O usuário está autenticado e tem acesso ao seu perfil e funcionalidades permitidas.
+    1. O ator acessa a página de login.
+    2. O ator fornece e-mail e senha.
+    3. O sistema valida as credenciais contra a base de dados do Firebase Auth.
+    4. O sistema verifica se existem Custom Claims (ex: admin).
+    5. O sistema concede acesso e redireciona para o Dashboard apropriado.
+- **Fluxos Alternativos:**
+    - **A1 (Cadastro):** O usuário fornece nome, e-mail e senha; o sistema cria a conta e inicializa os dados básicos no Firestore.
+- **Fluxos de Exceção:**
+    - **E1 (Credenciais Inválidas):** O sistema exibe mensagem de erro e permanece na tela de login.
+- **Regras de Negócio:**
+    - **RN-01:** Senhas devem ter no mínimo 6 caracteres.
+    - **RN-02:** O e-mail deve ser único no sistema.
 
 ### UC-02: Gerenciar Contas Financeiras
-- **Atores:** Usuário Autenticado
-- **Resumo:** Permite que o usuário crie, visualize, edite e remova suas contas financeiras.
+- **Atores:** Usuário Autenticado.
+- **Resumo:** Permite o controle das fontes de recursos (bancos, carteira, poupança).
 - **Pré-condições:** Nenhuma.
-- **Fluxo Principal (Visualizar e Navegar):**
-    1. O usuário navega para a seção "Contas".
-    2. O sistema exibe a lista de contas.
-    3. O usuário clica em um card de conta específica.
-    4. O sistema redireciona para a lista de Transações filtrada por aquela conta.
+- **Fluxo Principal (Criação):**
+    1. O usuário acessa a seção de Contas.
+    2. O usuário aciona "Adicionar Conta".
+    3. O usuário preenche nome, tipo de conta e saldo inicial.
+    4. O sistema persiste os dados e atualiza o saldo consolidado.
 - **Fluxos Alternativos:**
-    - **A1: Criar Conta:** O usuário preenche o formulário de nova conta com nome, tipo e saldo inicial.
-- **Pós-condição:** A lista de contas do usuário é exibida ou atualizada.
+    - **A1 (Navegação):** O usuário clica em uma conta existente; o sistema redireciona para a lista de transações filtrada por aquela conta.
+- **Regras de Negócio:**
+    - **RN-03:** O saldo inicial não pode ser negativo no momento da criação.
 
 ### UC-03: Gerenciar Transações
-- **Atores:** Usuário Autenticado
-- **Resumo:** Permite que o usuário registre, visualize e filtre suas transações.
-- **Pré-condições:** O usuário deve possuir pelo menos uma conta financeira cadastrada.
-- **Fluxo Principal (Filtrar Transações):**
-    1. O usuário navega para a seção "Transações".
-    2. O usuário seleciona uma conta específica no seletor de filtros.
-    3. O sistema atualiza a lista exibindo apenas transações daquela conta.
-    4. O usuário clica na aba "Receitas" ou "Despesas".
-    5. O sistema refina a filtragem para exibir apenas o tipo selecionado para a conta escolhida.
+- **Atores:** Usuário Autenticado.
+- **Resumo:** Registro e monitoramento de entradas e saídas financeiras.
+- **Pré-condições:** Existência de pelo menos uma Conta cadastrada.
+- **Fluxo Principal:**
+    1. O usuário aciona "Nova Transação".
+    2. O usuário define o tipo (Receita/Despesa), valor, conta de origem/destino e categoria.
+    3. O sistema atualiza o saldo da conta associada em tempo real.
+- **Fluxos Alternativos:**
+    - **A1 (Sugestão de Categoria):** O usuário solicita sugestão à IA baseada na descrição; a IA retorna até 3 opções.
+    - **A2 (Explicação de Transação):** O usuário solicita esclarecimento de um jargão bancário; a IA retorna uma explicação simples.
 - **Fluxos de Exceção:**
-    - **E1: Sem resultados:** Se a combinação de filtros não encontrar transações, o sistema exibe uma mensagem informativa.
+    - **E1 (Conta não selecionada):** O sistema impede o salvamento até que uma conta válida seja escolhida.
 - **Regras de Negócio:**
-    - **RN-04:** Uma transação do tipo "Despesa" debita o valor do saldo da conta.
-- **Pós-condição:** As transações são exibidas de acordo com os critérios de filtragem.
+    - **RN-04:** Transações do tipo despesa devem subtrair do saldo; receitas devem somar.
 
-### UC-06: Consultar Dashboard
-- **Atores:** Usuário Autenticado
-- **Resumo:** Permite que o usuário visualize um resumo consolidado de sua situação financeira.
+### UC-04: Gerenciar Categorias
+- **Atores:** Usuário Autenticado.
+- **Resumo:** Personalização das etiquetas de classificação de gastos e ganhos.
 - **Pré-condições:** Nenhuma.
 - **Fluxo Principal:**
-    1. O usuário acessa a página principal (Dashboard).
-    2. O sistema exibe o saldo total, resumo do mês e gastos por categoria.
-- **Pós-condição:** O usuário tem uma visão geral de sua saúde financeira.
+    1. O usuário acessa a página de Categorias.
+    2. O usuário adiciona uma nova categoria definindo se ela se aplica a Receitas, Despesas ou Ambos.
+- **Regras de Negócio:**
+    - **RN-05:** Categorias nativas do sistema não podem ser excluídas pelo usuário.
+
+### UC-05: Gerenciar Metas Financeiras
+- **Atores:** Usuário Autenticado.
+- **Resumo:** Planejamento de objetivos de médio/longo prazo.
+- **Pré-condições:** Nenhuma.
+- **Fluxo Principal:**
+    1. O usuário define um nome para a meta, valor alvo e data limite.
+    2. O sistema calcula o progresso percentual baseado no valor atual economizado.
+- **Fluxos de Exceção:**
+    - **E1 (Data Inválida):** O sistema impede a criação se a data alvo for anterior à data atual.
+- **Regras de Negócio:**
+    - **RN-06:** O valor alvo deve ser estritamente maior que o valor já acumulado.
+
+### UC-06: Consultar Dashboard
+- **Atores:** Usuário Autenticado.
+- **Resumo:** Visão consolidada da saúde financeira.
+- **Pré-condições:** Existência de dados de contas e transações para exibição significativa.
+- **Fluxo Principal:**
+    1. O sistema agrega saldos de todas as contas para exibir o "Saldo Total".
+    2. O sistema filtra transações do mês corrente para exibir "Receitas" e "Despesas".
+    3. O sistema gera gráfico de pizza/barras com a distribuição por categorias.
 
 ### UC-07: Acessar Painel Administrativo
-- **Atores:** Administrador
-- **Resumo:** Permite que um administrador visualize métricas de uso da plataforma.
-- **Pré-condições:** O usuário deve possuir Custom Claims de 'admin' no seu token de autenticação, atribuídos manualmente por um processo de governança.
+- **Atores:** Administrador.
+- **Resumo:** Supervisão de métricas globais da plataforma.
+- **Pré-condições:** Ator deve possuir privilégios administrativos atribuídos manualmente via backend.
 - **Fluxo Principal:**
-    1. O Administrador acessa a rota `/admin` ou clica no atalho no menu.
-    2. O sistema valida os privilégios.
-    3. O sistema exibe métricas agregadas (total de usuários, volume de transações, etc.).
+    1. O administrador acessa a rota `/admin`.
+    2. O sistema valida os privilégios no token de acesso.
+    3. O sistema exibe volumetria de usuários e transações de forma anonimizada.
 - **Regras de Negócio:**
-    - **RN-05:** Dados individuais dos usuários nunca devem ser expostos ao administrador; apenas dados agregados e anonimizados.
+    - **RN-07:** Dados sensíveis e transações individuais de usuários nunca devem ser visíveis no painel administrativo.

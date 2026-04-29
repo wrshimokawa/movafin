@@ -6,29 +6,32 @@
 
 ## 2. Core Features
 
-- **Secure User Authentication:** User registration, login, and secure session management. Multi-tenancy is implemented, ensuring each user's financial data remains private and isolated.
-- **Brazilian Portuguese Interface:** All user interface elements, labels, and messages will be presented in Brazilian Portuguese.
-- **Account Management:** Users can create, edit, and track multiple financial accounts (e.g., checking, savings, cash), viewing individual balances and a consolidated overview.
-- **Detailed Transaction Logging:** Record all income and expense transactions, including date, amount, descriptive notes, the associated account, and a customizable category. Anexos poderão ser adicionados aos lançamentos.
-- **Flexible Categorization:** Empower users to easily create, edit, and manage custom categories for their transactions and define specific types for their financial accounts.
-- **Simplified Financial Dashboard:** A responsive and intuitive dashboard providing a clear, high-level overview of personal finances, including account summaries and recent activity, tailored for financial beginners.
-- **AI Transaction Explainer Tool:** An AI tool designed to clarify and rephrase complex bank statement descriptions or financial jargon into plain, easy-to-understand language.
-- **Admin Overview & Reporting:** A secure, dedicated interface for authenticated administrators to view aggregated and anonymized financial trends and platform usage data across the entire user base for strategic decision-making.
+- **Secure User Authentication:** User registration, login, and secure session management via Firebase. Multi-tenancy is implemented for data privacy.
+- **Brazilian Portuguese Interface:** 100% localized for Brazilian users.
+- **Account Management:** Track multiple financial accounts (checking, savings, cash) with individual and consolidated balances.
+- **Detailed Transaction Logging:** Record income and expenses with categories, notes, and attachments (receipts).
+- **Flexible Categorization:** Custom categories for transactions and account types.
+- **Simplified Financial Dashboard:** High-level overview with visual charts (spending by category, monthly flow).
+- **AI Transaction Explainer Tool:** Powered by Google Genkit to simplify financial jargon.
+- **Financial Goals:** Create and track progress towards savings goals with target dates.
+- **Admin Overview:** Dedicated dashboard for platform administrators to view aggregated, anonymized trends.
 
 ## 3. Style Guidelines
 
-- **Primary color:** A deep, professional indigo (`#4D3399`), evoking trust and stability in financial management.
-- **Background color:** A very light, almost white blue-grey (`#F5F4F8`), providing a clean, spacious, and accessible canvas for information.
-- **Accent color:** A vibrant royal blue (`#5A7EED`), used for highlights, calls-to-action, and interactive elements to draw attention without being overwhelming.
-- **All text:** 'Inter' (sans-serif) for its modern, neutral, and highly readable characteristics, optimizing for clarity and accessibility across all screen sizes.
-- **Icons:** Use a set of simple, clear, and modern line icons that intuitively represent financial concepts like accounts, transactions, and categories, ensuring universal understanding.
-- **Layout:** A responsive, mobile-first design with a clean, card-based layout for financial summaries and transaction listings. Generous white space will be used to reduce visual clutter and improve comprehension for new users.
-- **Animations:** Implement subtle and purposeful animations for state changes, data loading, and interactive feedback, enhancing user experience without causing distraction or slow-downs.
+- **Primary color:** Professional indigo (`#4D3399`).
+- **Background color:** Light blue-grey (`#F5F4F8`).
+- **Accent color:** Vibrant royal blue (`#5A7EED`).
+- **Typography:** 'Inter' (sans-serif) for maximum readability.
+- **Icons:** Modern line icons (Lucide) representing financial concepts.
+- **Layout:** Responsive, mobile-first, card-based design with generous white space.
 
 ## 4. Detailed Documentation
 
-For a more detailed breakdown of the project requirements, please refer to the following documents:
+Refer to the following documents for deep technical specifications:
 
-- **[Functional Requirements](./functional-requirements.md):** Describes what the system should do.
-- **[Non-Functional Requirements](./non-functional-requirements.md):** Defines the quality attributes and constraints of the system.
-- **[Legal and Compliance Requirements](./legal-requirements.md):** Outlines the legal and regulatory obligations.
+- **[Functional Requirements](./functional-requirements.md):** Detailed list of RFs.
+- **[Use Cases](./usecases.md):** Flow specifications and business rules (Referencing `usecases.png`).
+- **[Non-Functional Requirements](./non-functional-requirements.md):** Performance, security, and usability constraints.
+- **[Development Schedule](./cronograma.md):** Project roadmap and sprints.
+- **[Architecture](./architecture.svg):** Visual system architecture.
+- **[Legal and Compliance](./legal-requirements.md):** Privacy policy and terms of service.
