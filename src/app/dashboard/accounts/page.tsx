@@ -1,10 +1,12 @@
+
 'use client';
 
 import { useState } from 'react';
-import { DollarSign, Landmark, PlusCircle } from 'lucide-react';
+import { Landmark, PlusCircle } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
+import Link from 'next/link';
 
 import { Button } from '@/components/ui/button';
 import {
@@ -25,7 +27,6 @@ import {
 } from '@/components/ui/dialog';
 import { DashboardHeader } from '@/components/dashboard-header';
 import { mockAccounts, mockAccountTypes } from '@/lib/data';
-import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import {
   Select,
@@ -56,9 +57,8 @@ export default function AccountsPage() {
   });
 
   function onSubmit(values: z.infer<typeof accountFormSchema>) {
-    // TODO: Implementar a lógica para salvar a conta no Firestore
     console.log(values);
-    setIsOpen(false); // Fecha o dialog após o submit
+    setIsOpen(false);
     form.reset();
   }
 
@@ -76,7 +76,7 @@ export default function AccountsPage() {
           <div>
             <h2 className="text-2xl font-bold tracking-tight">Suas Contas</h2>
             <p className="text-muted-foreground">
-              Visualize e gerencie suas contas financeiras.
+              Visualize e gerencie suas contas financeiras. Clique em uma conta para ver suas transações.
             </p>
           </div>
           <Dialog open={isOpen} onOpenChange={setIsOpen}>
@@ -171,30 +171,32 @@ export default function AccountsPage() {
         </div>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {mockAccounts.map((account) => (
-            <Card key={account.id}>
-              <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
-                <div className="space-y-1">
-                  <CardTitle className="text-lg">{account.name}</CardTitle>
-                  <CardDescription>
-                    {
-                      mockAccountTypes.find((t) => t.id === account.type)
-                        ?.name
-                    }
-                  </CardDescription>
-                </div>
-                <Landmark className="h-5 w-5 text-muted-foreground" />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">
-                  {formatCurrency(account.balance)}
-                </div>
-                {account.bank && (
-                  <p className="text-xs text-muted-foreground">
-                    {account.bank}
-                  </p>
-                )}
-              </CardContent>
-            </Card>
+            <Link key={account.id} href={`/dashboard/transactions?accountId=${account.id}`}>
+              <Card className="hover:border-primary transition-colors cursor-pointer h-full">
+                <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-2">
+                  <div className="space-y-1">
+                    <CardTitle className="text-lg">{account.name}</CardTitle>
+                    <CardDescription>
+                      {
+                        mockAccountTypes.find((t) => t.id === account.type)
+                          ?.name
+                      }
+                    </CardDescription>
+                  </div>
+                  <Landmark className="h-5 w-5 text-muted-foreground" />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">
+                    {formatCurrency(account.balance)}
+                  </div>
+                  {account.bank && (
+                    <p className="text-xs text-muted-foreground">
+                      {account.bank}
+                    </p>
+                  )}
+                </CardContent>
+              </Card>
+            </Link>
           ))}
         </div>
       </main>
