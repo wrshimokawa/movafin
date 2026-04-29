@@ -1,0 +1,101 @@
+rules_version = '2';
+
+/**
+ * MovaFin Security Rules
+ * 
+ * CORE PHILOSOPHY:
+ * This ruleset enforces a strict User-Ownership model. Access to financial data is entirely 
+ * partitioned by the User's unique identifier (UID). The system is designed for multi-tenancy, 
+ * ensuring that data for one user is never accessible or visible to another.
+ *
+ * DATA STRUCTURE:
+ * The database follows a hierarchical structure rooted at /users/{userId}. All critical 
+ * financial entities (Accounts, Transactions, Categories, etc.) are stored as subcollections 
+ * of the specific user they belong to.
+ *
+ * KEY SECURITY DECISIONS:
+ * 1. Authorization Independence: We use the userId wildcard from the document path as the 
+ *    primary source of truth for ownership, combined with denormalized 'userId' fields inside 
+ *    documents for integrity.
+ * 2. Admin Oversight: A top-level 'roles_admin' collection allows for global administrative 
+ *    access via an existence check (exists(/databases/$(database)/documents/roles_admin/$(uid))).
+ * 3. Prototyping Flexibility: While authorization (WHO can access) is strictly enforced, 
+ *    data schema (WHAT the data looks like) is kept flexible to allow for rapid iteration.
+ * 4. Local Development: These rules are fully compatible with the Firebase Emulator Suite. 
+ *    When running locally, the emulator will strictly enforce these same rules, ensuring 
+ *    parity between development and production environments.
+ */
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // --- GLOBAL HELPER FUNCTIONS ---
+
+    /** Checks if the request is from an authenticated user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** Checks if the authenticated user's UID matches the provided userId. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** Checks if the user is an owner and the document already exists (for updates/deletes). */
+    function isExistingOwner(userId) {
+      return isOwner(userId) && resource != null;
+    }
+
+    /** Checks if the authenticated user has administrative privileges. */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    // --- COLLECTION RULES ---
+
+    /**
+     * @description Rules for the User profile. Allows users to manage their own profile.
+     * @path /users/{userId}
+     * @allow (create) request.auth.uid == 'user_123' (where userId is 'user_123')
+     * @deny (get) If request.auth.uid != userId
+     * @principle Pattern 4: Self-Creation. Users can only create their own profile document.
+     */
+    match /users/{userId} {
+      allow get: if isOwner(userId) || isAdmin();
+      allow list: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if isExistingOwner(userId);
+
+      /**
+       * @description Shared rule block for all user-specific subcollections (Accounts, Transactions, etc.).
+       * @path /users/{userId}/{collection}/{docId}
+       * @allow (list) request.auth.uid == userId
+       * @deny (create) If request.resource.data.userId != userId
+       * @principle Pattern 1: Ownership. Strict isolation of data based on the parent userId path.
+       */
+      match /{allSubcollections=**} {
+        allow get: if isOwner(userId) || isAdmin();
+        allow list: if isOwner(userId) || isAdmin();
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+
+    /**
+     * @description Manages administrator privileges. Presence of a document grants admin status.
+     * @path /roles_admin/{adminUid}
+     * @allow (get) Any authenticated user can check if a UID is an admin.
+     * @deny (write) No client-side creation or modification of admin roles.
+     * @principle Pattern 2: Roles. Controlled collection for database-wide permissions.
+     */
+    match /roles_admin/{adminUid} {
+      allow get: if isSignedIn();
+      allow list: if isAdmin();
+      allow create: if false; // Admin roles should be managed via Admin SDK or Console
+      allow update: if false;
+      allow delete: if false;
+    }
+  }
+}

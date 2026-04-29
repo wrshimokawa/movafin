@@ -1,0 +1,442 @@
+{
+  "entities": {
+    "User": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "User",
+      "type": "object",
+      "description": "Represents an individual user (tenant) within the application. All financial data is associated with a specific user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the User entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The full name of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user, used for identification.",
+          "format": "email"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the user account was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the user account was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "email",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "AccountType": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "AccountType",
+      "type": "object",
+      "description": "Defines a customizable type for financial accounts (e.g., 'Checking Account', 'Savings Account', 'Cash'). Each user manages their own list of account types.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the AccountType entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this account type. (Relationship: User 1:N AccountType)"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the account type (e.g., 'Conta Corrente')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the account type."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the account type was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the account type was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "name",
+        "description",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Account": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Account",
+      "type": "object",
+      "description": "Represents a single financial account owned by a user, tracking its balance and type.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Account entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this account. (Relationship: User 1:N Account)"
+        },
+        "accountTypeId": {
+          "type": "string",
+          "description": "Reference to the AccountType classifying this account (e.g., 'Checking Account'). (Relationship: AccountType 1:N Account)"
+        },
+        "name": {
+          "type": "string",
+          "description": "The display name of the account (e.g., 'Minha Poupança')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description or notes about the account."
+        },
+        "balance": {
+          "type": "number",
+          "description": "The current balance of the account."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the account was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the account was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "accountTypeId",
+        "name",
+        "description",
+        "balance",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "MovementType": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "MovementType",
+      "type": "object",
+      "description": "Defines high-level classifications for financial transactions (e.g., 'Income', 'Expense', 'Transfer'). This list is editable by each user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the MovementType entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this movement type. (Relationship: User 1:N MovementType)"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the movement type (e.g., 'Entrada', 'Saída', 'Transferência')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the movement type."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the movement type was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the movement type was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "name",
+        "description",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Category": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Category",
+      "type": "object",
+      "description": "Defines specific, customizable categories for financial transactions (e.g., 'Groceries', 'Salary', 'Rent'). Each category is associated with a MovementType.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Category entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this category. (Relationship: User 1:N Category)"
+        },
+        "movementTypeId": {
+          "type": "string",
+          "description": "Reference to the MovementType this category belongs to (e.g., 'Expense' for 'Groceries'). (Relationship: MovementType 1:N Category)"
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the category (e.g., 'Alimentação', 'Salário')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the category."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the category was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the category was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "movementTypeId",
+        "name",
+        "description",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "Transaction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Transaction",
+      "type": "object",
+      "description": "Represents a single financial entry (income or expense) recorded by a user, detailing its amount, date, associated account, and classifications.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Transaction entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who recorded this transaction. (Relationship: User 1:N Transaction)"
+        },
+        "accountId": {
+          "type": "string",
+          "description": "Reference to the financial Account involved in this transaction. (Relationship: Account 1:N Transaction)"
+        },
+        "movementTypeId": {
+          "type": "string",
+          "description": "Reference to the high-level MovementType (e.g., 'Income', 'Expense') of this transaction. (Relationship: MovementType 1:N Transaction)"
+        },
+        "categoryId": {
+          "type": "string",
+          "description": "Reference to the specific Category (e.g., 'Groceries', 'Salary') of this transaction. (Relationship: Category 1:N Transaction)"
+        },
+        "date": {
+          "type": "string",
+          "description": "The date when the transaction occurred.",
+          "format": "date"
+        },
+        "amount": {
+          "type": "number",
+          "description": "The monetary value of the transaction. Positive for income, negative for expenses."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief summary or title for the transaction."
+        },
+        "notes": {
+          "type": "string",
+          "description": "Detailed observations or additional information about the transaction."
+        },
+        "attachmentUrls": {
+          "type": "array",
+          "description": "An array of URLs pointing to attachments related to this transaction (e.g., receipts, invoices).",
+          "items": {
+            "type": "string"
+          }
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the transaction record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the transaction record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "accountId",
+        "movementTypeId",
+        "categoryId",
+        "date",
+        "amount",
+        "description",
+        "createdAt",
+        "updatedAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/users/{userId}",
+        "definition": {
+          "entityName": "User",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "Stores user profile information. The `userId` in the path corresponds to the user's authentication UID, ensuring private access. Includes the user's ID, name, email, and timestamps.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier for the User, matching their Firebase Authentication UID."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/accountTypes/{accountTypeId}",
+        "definition": {
+          "entityName": "AccountType",
+          "schema": {
+            "$ref": "#/backend/entities/AccountType"
+          },
+          "description": "User-defined types for financial accounts (e.g., 'Checking', 'Savings'). Each document includes the `userId` field which is denormalized from the parent path for authorization independence, allowing direct `request.auth.uid` comparisons.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the User who owns this account type."
+            },
+            {
+              "name": "accountTypeId",
+              "description": "The unique identifier for the specific AccountType."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/accounts/{accountId}",
+        "definition": {
+          "entityName": "Account",
+          "schema": {
+            "$ref": "#/backend/entities/Account"
+          },
+          "description": "Represents individual financial accounts owned by a user. Each document includes the `userId` field which is denormalized from the parent path for authorization independence, enabling direct `request.auth.uid` comparisons for access control.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the User who owns this account."
+            },
+            {
+              "name": "accountId",
+              "description": "The unique identifier for the specific Account."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/movementTypes/{movementTypeId}",
+        "definition": {
+          "entityName": "MovementType",
+          "schema": {
+            "$ref": "#/backend/entities/MovementType"
+          },
+          "description": "User-defined high-level classifications for financial transactions (e.g., 'Income', 'Expense'). Each document includes the `userId` field which is denormalized from the parent path for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the User who owns this movement type."
+            },
+            {
+              "name": "movementTypeId",
+              "description": "The unique identifier for the specific MovementType."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/categories/{categoryId}",
+        "definition": {
+          "entityName": "Category",
+          "schema": {
+            "$ref": "#/backend/entities/Category"
+          },
+          "description": "User-defined specific categories for financial transactions (e.g., 'Groceries'). Each document includes the `userId` field which is denormalized from the parent path for authorization independence.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the User who owns this category."
+            },
+            {
+              "name": "categoryId",
+              "description": "The unique identifier for the specific Category."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/users/{userId}/transactions/{transactionId}",
+        "definition": {
+          "entityName": "Transaction",
+          "schema": {
+            "$ref": "#/backend/entities/Transaction"
+          },
+          "description": "Individual financial entries (income/expense) recorded by a user. Each document includes the `userId` field which is denormalized from the parent path for authorization independence, and references to `accountId`, `movementTypeId`, and `categoryId`.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique identifier of the User who recorded this transaction."
+            },
+            {
+              "name": "transactionId",
+              "description": "The unique identifier for the specific Transaction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{adminUid}",
+        "definition": {
+          "entityName": "AdminRole",
+          "schema": {
+            "$ref": "#/backend/entities/User"
+          },
+          "description": "A top-level collection to manage administrator roles. The existence of a document at this path signifies that the user identified by `{adminUid}` has administrative privileges. Used for DBAC (Database Access Control) and enables a simple `exists()` check in security rules for admin authorization.",
+          "params": [
+            {
+              "name": "adminUid",
+              "description": "The unique identifier of a user who has been granted administrator privileges."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The recommended Firestore structure for MovaFin is designed to strictly adhere to the CORE DESIGN PRINCIPLES, especially Authorization Independence, by using a deeply nested, user-centric hierarchy. Each user's financial data is isolated within their own subcollections, starting with `/users/{userId}`. This pattern ensures multi-tenancy where each user can only access their own data, and it significantly simplifies security rules.\n\n**Authorization Independence:** This is achieved by embedding the `userId` directly into the document path (e.g., `/users/{userId}/accountTypes/{accountTypeId}`) and also including the `userId` field within every document in these subcollections. This dual approach means that security rules can always determine the owner from `request.auth.uid` matching the `{userId}` wildcard in the path, without needing to perform `get()` operations on parent documents. For instance, to check if a user can access an AccountType document, the rule simply verifies `request.auth.uid == userId` (from the path). This enables atomic batch operations and simplifies rule debugging.\n\n**Querying and Authorization Posture (QAPs):** The structural segregation of data per user (e.g., `/users/{userId}/accounts`) intrinsically supports QAPs. When a user queries their accounts, they will issue a query to `db.collection('users').doc(request.auth.uid).collection('accounts')`. Firestore security rules can then easily enforce that `request.auth.uid == userId` for any read/write operation within that path segment. This means `list` operations automatically respect security boundaries without requiring additional server-side filtering, preventing over-fetching of data. Admin access is handled by a separate top-level `roles_admin` collection, where the existence of a document `roles_admin/{adminUid}` grants admin privileges, enabling an additional check in security rules for elevated access.\n\n**Structural Segregation & Access Modeling:** All user-owned data types (AccountType, Account, MovementType, Category, Transaction) are placed in their own subcollections directly under the user's document. This ensures that all documents within a given subcollection (e.g., `/users/{userId}/accountTypes`) share the exact same security posture: ownership by the `{userId}`. This homogeneous security posture dramatically simplifies the security rules. Path-based ownership (`/users/{userId}/data`) is consistently used for all private user data, and the `userId` field on each document provides explicit ownership metadata."
+  }
+}
