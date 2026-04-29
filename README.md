@@ -19,6 +19,47 @@ MovaFin é uma aplicação web moderna e intuitiva, projetada para ajudar usuár
 - **Inteligência Artificial:** Google Genkit
 - **Backend:** Firebase (Authentication, Firestore, Storage)
 
+## 🏛️ Arquitetura da Aplicação
+
+A arquitetura do MovaFin foi projetada para ser moderna, segura e escalável, utilizando as melhores práticas do ecossistema Next.js e Firebase.
+
+![Diagrama de Arquitetura](./docs/architecture.svg)
+
+- **Frontend:** Construído com Next.js e React, utilizando o App Router para uma navegação otimizada e Server Components para melhor performance.
+- **UI:** A interface é desenvolvida com ShadCN UI e Tailwind CSS, garantindo um design consistente, responsivo e acessível.
+- **Backend & Banco de Dados:** O Firebase fornece todos os serviços de backend necessários:
+    - **Firebase Authentication:** Para um sistema de autenticação seguro e fácil de usar.
+    - **Firestore:** Como banco de dados NoSQL para armazenar todos os dados da aplicação (contas, transações, metas, etc.), garantindo isolamento de dados por usuário através de Security Rules.
+    - **Firebase Storage:** Para o upload e armazenamento de arquivos, como comprovantes de transações.
+- **Inteligência Artificial:** O Google Genkit é usado para orquestrar as chamadas aos modelos de IA do Google (Gemini), potencializando funcionalidades como o explicador de transações e a sugestão de categorias.
+
+## 📂 Estrutura do Projeto
+
+A estrutura de pastas do projeto foi organizada para promover a modularidade e facilitar a manutenção.
+
+```
+/
+├── .env              # Variáveis de ambiente (chaves de API, etc.)
+├── .next/            # Build de produção do Next.js
+├── docs/             # Documentação do projeto (PRD, Requisitos, etc.)
+├── public/           # Arquivos estáticos
+├── src/
+│   ├── app/          # Rotas, páginas e layouts do Next.js App Router
+│   ├── components/   # Componentes React reutilizáveis (UI e de funcionalidade)
+│   ├── lib/          # Funções utilitárias, tipos e dados mockados
+│   ├── hooks/        # Hooks React customizados
+│   ├── ai/           # Configuração e fluxos do Genkit (IA)
+│   └── firebase/     # Configuração e hooks do Firebase (ainda a ser criado)
+├── package.json      # Dependências e scripts do projeto
+└── ...               # Outros arquivos de configuração (tailwind, tsconfig, etc.)
+```
+- **`src/app`**: Contém a estrutura principal de rotas da aplicação, seguindo o padrão do App Router do Next.js. Cada pasta corresponde a um segmento de URL.
+- **`src/components`**: Abriga todos os componentes React. A subpasta `ui` é dedicada aos componentes do ShadCN, enquanto outros componentes reutilizáveis da aplicação ficam na raiz de `components`.
+- **`src/lib`**: Centraliza a lógica de negócios, definições de tipos TypeScript (`types.ts`), funções utilitárias (`utils.ts`) e dados estáticos/mockados.
+- **`src/hooks`**: Para hooks customizados que encapsulam lógica e estado, como o `use-toast`.
+- **`src/ai`**: Onde toda a lógica de Inteligência Artificial com Genkit é definida. Os `flows` são as funções que interagem com os modelos de linguagem.
+- **`docs`**: Toda a documentação do projeto, incluindo requisitos, decisões de arquitetura e cronograma.
+
 ## 🏃 Getting Started
 
 Para rodar o projeto localmente:

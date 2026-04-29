@@ -1,0 +1,69 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg" font-family="Inter, sans-serif" font-size="14px">
+  <defs>
+    <style>
+      .box { fill: #F5F4F8; stroke: #4D3399; stroke-width: 2; rx: 8; ry: 8; }
+      .box-title { font-weight: bold; fill: #4D3399; font-size: 16px; }
+      .box-text { fill: #333; }
+      .arrow { stroke: #5A7EED; stroke-width: 2; marker-end: url(#arrowhead); }
+      .arrow-dashed { stroke: #5A7EED; stroke-width: 2; stroke-dasharray: 5,5; marker-end: url(#arrowhead); }
+      .label { fill: #5A7EED; font-size: 12px; text-anchor: middle; }
+    </style>
+    <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#5A7EED" />
+    </marker>
+  </defs>
+
+  <rect x="50" y="250" width="120" height="100" class="box"/>
+  <text x="110" y="280" text-anchor="middle" class="box-title">Usuário</text>
+  <text x="110" y="310" text-anchor="middle" class="box-text">Web Browser</text>
+
+  <rect x="250" y="50" width="300" height="500" class="box"/>
+  <text x="400" y="80" text-anchor="middle" class="box-title">Frontend (Next.js)</text>
+  <rect x="270" y="100" width="260" height="100" fill="#fff" stroke="#ccc" rx="4"/>
+  <text x="400" y="120" text-anchor="middle" font-weight="bold">UI (React)</text>
+  <text x="400" y="145" text-anchor="middle">Páginas, Componentes</text>
+  <text x="400" y="165" text-anchor="middle" fill="#5A7EED">/app, /components</text>
+  
+  <rect x="270" y="220" width="260" height="100" fill="#fff" stroke="#ccc" rx="4"/>
+  <text x="400" y="240" text-anchor="middle" font-weight="bold">Lógica de Cliente</text>
+  <text x="400" y="265" text-anchor="middle">Hooks, Utils</text>
+  <text x="400" y="285" text-anchor="middle" fill="#5A7EED">/hooks, /lib</text>
+
+  <rect x="270" y="340" width="260" height="150" fill="#fff" stroke="#ccc" rx="4"/>
+  <text x="400" y="360" text-anchor="middle" font-weight="bold">Server Actions / Flows</text>
+  <text x="400" y="385" text-anchor="middle">Funções do lado do servidor</text>
+  <text x="400" y="405" text-anchor="middle">(Genkit)</text>
+  <text x="400" y="450" text-anchor="middle" fill="#5A7EED">/ai/flows</text>
+  
+
+  <line x1="170" y1="300" x2="250" y2="300" class="arrow" />
+  <text x="210" y="295" class="label">HTTPS</text>
+  
+  <rect x="620" y="50" width="150" height="80" class="box"/>
+  <text x="695" y="80" text-anchor="middle" class="box-title">Firebase</text>
+  <text x="695" y="100" text-anchor="middle" class="box-title">Auth</text>
+
+  <rect x="620" y="150" width="150" height="80" class="box"/>
+  <text x="695" y="180" text-anchor="middle" class="box-title">Firestore</text>
+  <text x="695" y="200" text-anchor="middle" class="box-text">DB</text>
+
+  <rect x="620" y="250" width="150" height="80" class="box"/>
+  <text x="695" y="280" text-anchor="middle" class="box-title">Firebase</text>
+  <text x="695" y="300" text-anchor="middle" class="box-title">Storage</text>
+
+  <rect x="620" y="390" width="150" height="80" class="box"/>
+  <text x="695" y="420" text-anchor="middle" class="box-title">Google AI</text>
+  <text x="695" y="440" text-anchor="middle" class="box-text">(Gemini)</text>
+  
+  <path d="M 550 150 Q 585 150 585 115 L 620 115" stroke="#5A7EED" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 550 170 Q 585 170 585 205 L 620 205" stroke="#5A7EED" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  <path d="M 550 270 Q 585 270 585 290 L 620 290" stroke="#5A7EED" stroke-width="2" fill="none" marker-end="url(#arrowhead)"/>
+  
+  <text x="580" y="90" class="label" font-size="10px">Auth SDK</text>
+  <text x="575" y="225" class="label" font-size="10px">Firestore SDK</text>
+  <text x="575" y="305" class="label" font-size="10px">Storage SDK</text>
+
+  <line x1="550" y1="410" x2="620" y2="410" class="arrow-dashed" />
+  <text x="585" y="405" class="label" font-size="10px">API Call</text>
+
+</svg>
