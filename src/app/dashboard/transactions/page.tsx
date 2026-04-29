@@ -338,6 +338,7 @@ export default function TransactionsPage() {
                                     selected={field.value}
                                     onSelect={field.onChange}
                                     initialFocus
+                                    locale={ptBR}
                                   />
                                 </PopoverContent>
                               </Popover>

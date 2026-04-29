@@ -194,6 +194,7 @@ export default function GoalsPage() {
                               selected={field.value}
                               onSelect={field.onChange}
                               initialFocus
+                              locale={ptBR}
                             />
                           </PopoverContent>
                         </Popover>
