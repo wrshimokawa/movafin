@@ -48,7 +48,7 @@ A seguir, a especificação detalhada de cada caso de uso.
 ### UC-02: Gerenciar Contas Financeiras
 - **Atores:** Usuário Autenticado
 - **Resumo:** Permite que o usuário crie, visualize, edite e remova suas contas financeiras.
-- **Pré-condições:** O usuário deve estar autenticado.
+- **Pré-condições:** Nenhuma.
 - **Fluxo Principal (Criar Conta):**
     1. O usuário navega para a seção "Contas".
     2. O usuário clica em "Adicionar Conta".
@@ -75,7 +75,7 @@ A seguir, a especificação detalhada de cada caso de uso.
 ### UC-03: Gerenciar Transações
 - **Atores:** Usuário Autenticado
 - **Resumo:** Permite que o usuário registre, visualize, edite e exclua suas transações (receitas e despesas).
-- **Pré-condições:** O usuário deve estar autenticado e possuir pelo menos uma conta cadastrada.
+- **Pré-condições:** O usuário deve possuir pelo menos uma conta financeira cadastrada.
 - **Fluxo Principal (Registrar Transação):**
     1. O usuário navega para a seção "Transações" e clica em "Adicionar Transação".
     2. O sistema exibe um formulário solicitando: Descrição, Valor, Tipo (Receita/Despesa), Categoria, Conta, Data, Notas (opcional) e Anexo (opcional).
@@ -94,7 +94,7 @@ A seguir, a especificação detalhada de cada caso de uso.
 ### UC-04: Gerenciar Categorias
 - **Atores:** Usuário Autenticado
 - **Resumo:** Permite que o usuário personalize suas categorias de transação e tipos de conta.
-- **Pré-condições:** O usuário deve estar autenticado.
+- **Pré-condições:** Nenhuma.
 - **Fluxo Principal (Criar Categoria):**
     1. O usuário navega para a seção "Categorias".
     2. O usuário preenche o nome e o tipo (Receita/Despesa) da nova categoria.
@@ -112,7 +112,7 @@ A seguir, a especificação detalhada de cada caso de uso.
 ### UC-05: Gerenciar Metas Financeiras
 - **Atores:** Usuário Autenticado
 - **Resumo:** Permite que o usuário crie, acompanhe, edite e exclua suas metas financeiras.
-- **Pré-condições:** O usuário deve estar autenticado.
+- **Pré-condições:** Nenhuma.
 - **Fluxo Principal (Criar Meta):**
     1. O usuário navega para a seção "Metas" e clica em "Adicionar Meta".
     2. O sistema exibe um formulário para: Nome, Valor Alvo, Valor Atual, Data Alvo e Descrição (opcional).
@@ -129,7 +129,7 @@ A seguir, a especificação detalhada de cada caso de uso.
 ### UC-06: Consultar Dashboard
 - **Atores:** Usuário Autenticado
 - **Resumo:** Permite que o usuário visualize um resumo consolidado de sua situação financeira.
-- **Pré-condições:** O usuário deve estar autenticado.
+- **Pré-condições:** Nenhuma.
 - **Fluxo Principal:**
     1. O usuário acessa a página principal do painel (Dashboard).
     2. O sistema busca e processa os dados do usuário (saldos, transações do mês).
@@ -141,7 +141,7 @@ A seguir, a especificação detalhada de cada caso de uso.
 ### UC-07: Usar Ferramentas de IA
 - **Atores:** Usuário Autenticado
 - **Resumo:** Permite que o usuário utilize as funcionalidades de IA para auxiliar na gestão financeira.
-- **Pré-condições:** O usuário deve estar autenticado.
+- **Pré-condições:** Nenhuma.
 - **Fluxo Principal (Explicar Transação):**
     1. O usuário abre a ferramenta "Explicador de Transações".
     2. O usuário insere um texto de uma transação complexa e solicita a explicação.
@@ -159,7 +159,7 @@ A seguir, a especificação detalhada de cada caso de uso.
 ### UC-08: Visualizar Dados Agregados
 - **Atores:** Administrador
 - **Resumo:** Permite que um administrador veja dados anônimos e agregados sobre o uso da plataforma.
-- **Pré-condições:** O usuário deve ser um Administrador e estar autenticado.
+- **Pré-condições:** Nenhuma.
 - **Fluxo Principal:**
     1. O Administrador acessa o painel administrativo através de uma rota segura.
     2. O sistema valida as permissões do Administrador.
