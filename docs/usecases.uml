@@ -1,27 +1,38 @@
-@startuml MovaFin Use Cases
+@startuml
 left to right direction
 skinparam packageStyle rectangle
 
-actor Usuário
-actor Administrador
+actor "Usuário Não Autenticado" as Guest
+actor "Usuário Autenticado" as User
+actor "Administrador" as Admin
 
 rectangle MovaFin {
-  Usuário -- (Gerenciar Autenticação)
-  Usuário -- (Gerenciar Contas)
-  Usuário -- (Gerenciar Transações)
-  Usuário -- (Gerenciar Categorias)
-  Usuário -- (Gerenciar Metas)
-  Usuário -- (Consultar Dashboard)
-  Usuário -- (Usar Ferramentas de IA)
-
-  (Gerenciar Autenticação) .> (Cadastrar-se) : <<include>>
-  (Gerenciar Autenticação) .> (Realizar Login) : <<include>>
-
-  (Gerenciar Transações) ..> (Anexar Comprovante) : <<extend>>
-  (Usar Ferramentas de IA) ..> (Explicar Transação) : <<extend>>
-  (Usar Ferramentas de IA) ..> (Sugerir Categoria) : <<extend>>
-  
-  Administrador -- (Visualizar Dados Agregados)
+  usecase "UC-01: Gerenciar Autenticação" as UC1
+  usecase "UC-02: Gerenciar Contas Financeiras" as UC2
+  usecase "UC-03: Gerenciar Transações" as UC3
+  usecase "UC-04: Gerenciar Categorias" as UC4
+  usecase "UC-05: Gerenciar Metas Financeiras" as UC5
+  usecase "UC-06: Consultar Dashboard" as UC6
+  usecase "UC-07: Acessar Painel Administrativo" as UC7
 }
 
+Guest --> UC1
+User --> UC1
+User --> UC2
+User --> UC3
+User --> UC4
+User --> UC5
+User --> UC6
+Admin --> UC7
+Admin --|> User
+
+note right of UC3
+  Inclui Sugestão de Categoria e
+  Explicação com IA (Genkit)
+end note
+
+note bottom of UC7
+  Acesso restrito via
+  Custom Claims/Firestore Flag
+end note
 @enduml

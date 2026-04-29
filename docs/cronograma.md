@@ -1,12 +1,12 @@
-
 # Cronograma de Desenvolvimento - MovaFin
 
 Este documento apresenta o cronograma de desenvolvimento do MovaFin, atualizado conforme as especificações detalhadas e o protótipo de alta fidelidade já construídos.
 
-## 🏁 Fase de Definição (Concluída)
+## 🏁 Fase de Definição e Prototipagem (Concluída)
 - Definição de PRD, Requisitos Funcionais, Não Funcionais e Legais.
 - Criação do Diagrama de Arquitetura e Casos de Uso.
 - Desenvolvimento do Protótipo de Alta Fidelidade (UI) com filtragem e validações.
+- Implementação inicial dos fluxos de IA (Genkit) e componentes explicadores.
 
 ## Sprint 1: Fundação e Autenticação Real
 - **Objetivo:** Transformar a autenticação mockada em um sistema real e seguro.
@@ -33,16 +33,16 @@ Este documento apresenta o cronograma de desenvolvimento do MovaFin, atualizado 
     - Cálculo dinâmico de progresso de metas baseado no saldo das contas.
 
 ## Sprint 4: Inteligência Artificial e Dashboard Real
-- **Objetivo:** Ativar as funcionalidades de IA e o resumo visual.
+- **Objetivo:** Validar as funcionalidades de IA com dados reais e consolidar o resumo visual.
 - **Tarefas:**
-    - Conectar o "Explicador de Transações" (IA) às chamadas reais do Genkit (RF-017).
-    - Conectar o "Sugeridor de Categorias" (IA) no formulário de transação (RF-018).
+    - Testes e refinamento do "Explicador de Transações" com dados do Firestore (RF-017).
+    - Refinamento do "Sugeridor de Categorias" no formulário de transação (RF-018).
     - Popular o Dashboard principal com agregações reais do Firestore (RF-008, RF-016).
 
 ## Sprint 5: Administração e Entrega
-- **Objetivo:** Implementar o acesso restrito e finalizar a aplicação.
+- **Objetivo:** Implementar o acesso restrito e finalizar a aplicação para produção.
 - **Tarefas:**
-    - Implementação do Painel Administrativo com dados agregados (RF-021).
+    - Implementação do Painel Administrativo com dados agregados e anonimizados (RF-021).
     - Configuração manual de Custom Claims para o primeiro usuário Administrador (RF-023).
-    - Revisão final de acessibilidade e performance (RN-001, RN-002).
-    - Deploy final e homologação.
+    - Revisão final de acessibilidade, performance e conformidade (RN-001, RN-002).
+    - Deploy final via Firebase App Hosting.

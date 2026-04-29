@@ -43,6 +43,11 @@ Para conectar ao banco de dados na nuvem:
 ## 🏛️ Documentação
 
 - [PRD - Product Requirements](./docs/PRD.md)
+- [Cronograma de Desenvolvimento](./docs/cronograma.md)
 - [Casos de Uso](./docs/usecases.md)
-- [Configuração de Administrador](./docs/admin-setup.md)
+- [Requisitos Funcionais](./docs/functional-requirements.md)
 - [Requisitos Não Funcionais](./docs/non-functional-requirements.md)
+- [Requisitos Legais](./docs/legal-requirements.md)
+- [Configuração de Administrador](./docs/admin-setup.md)
+- [Política de Privacidade](./docs/privacy-policy.md)
+- [Termos de Serviço](./docs/terms-of-service.md)
