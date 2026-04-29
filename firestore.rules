@@ -4,146 +4,143 @@ service cloud.firestore {
 
     /**
      * CORE PHILOSOPHY:
-     * This ruleset enforces a strict multi-tenant ownership model designed for a financial 
-     * application (MovaFin). Security is centered around the User's unique identifier (UID).
-     * 
+     * This ruleset enforces a strict user-ownership model using hierarchical path-based multi-tenancy.
+     * All financial data (Accounts, Transactions, etc.) is nested under /users/{userId} to ensure 
+     * that query access patterns are naturally scoped to the authenticated user.
+     *
      * DATA STRUCTURE:
-     * All sensitive financial data is nested under the path `/users/{userId}/`. This hierarchical 
-     * organization ensures that data is naturally partitioned by owner.
-     * 
+     * - /users/{userId}: The root user profile.
+     * - /users/{userId}/account_types: User-customizable account classifications.
+     * - /users/{userId}/accounts: Financial accounts owned by the user.
+     * - /users/{userId}/transaction_categories: User-customizable transaction classifications.
+     * - /users/{userId}/accounts/{accountId}/transactions: Financial movements within an account.
+     * - /users/{userId}/accounts/{accountId}/transactions/{transactionId}/attachments: Files linked to transactions.
+     * - /roles_admin/{userId}: A system-level collection for administrative privileges.
+     *
      * KEY SECURITY DECISIONS:
-     * 1. Authorization Independence: Every document contains a denormalized `userId` field. This 
-     *    allows rules to verify ownership using the document's own data without expensive 
-     *    `get()` lookups to parent documents.
-     * 2. Administrative Override: A global admin role is defined in the `/roles_admin` collection. 
-     *    Authenticated users present in this collection gain full read/write access to all data 
-     *    for maintenance and support.
-     * 3. Relational Integrity: On creation and update, the rules enforce that internal 
-     *    relationship fields (like `userId` or `transactionId`) remain consistent with 
-     *    the document's location in the database path.
-     * 4. Prototyping Flexibility: While authorization is strictly enforced, data types 
-     *    and general schema shapes are not validated to allow for rapid frontend iteration.
+     * - DENORMALIZATION FOR AUTHORIZATION: Every document includes a `userId` field to allow for 
+     *   Authorization Independence. This avoids expensive `get()` calls to parent documents.
+     * - RELATIONAL INTEGRITY: Rules enforce that internal `userId` and parent-link fields (like `accountId`) 
+     *   match the document's path during creation and remain immutable.
+     * - PROTOTYPING FLEXIBILITY: Schema shapes (types, optional fields) are not validated to allow 
+     *   rapid frontend iteration, while authorization remains strictly locked down.
      */
 
-    // --- Helper Functions ---
+    // --- HELPER FUNCTIONS ---
 
-    /** @description Checks if the request is from an authenticated user. */
     function isSignedIn() {
       return request.auth != null;
     }
 
-    /** @description Checks if the authenticated user matches the provided userId. */
     function isOwner(userId) {
       return isSignedIn() && request.auth.uid == userId;
     }
 
-    /** @description Checks if the user is a registered administrator. */
-    function isAdmin() {
-      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
-    }
-
-    /** @description Combines ownership and existence checks for state-changing operations. */
     function isExistingOwner(userId) {
-      return isOwner(userId) && resource != null;
+      return resource != null && isOwner(userId);
     }
 
-    /** @description Validates that the userId in the document matches the path userId. */
-    function matchesPath(userId) {
-      return request.resource.data.userId == userId;
+    function isAdmin() {
+      return exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
     }
 
-    /** @description Ensures a field is not changed during an update. */
-    function isUnchanged(field) {
-      return request.resource.data[field] == resource.data[field];
-    }
-
-    // --- Collection Rules ---
+    // --- COLLECTION RULES ---
 
     /**
-     * @description Rules for global admin role definitions.
-     * @path /roles_admin/{adminId}
-     * @allow (get) Any signed-in user checking their own role status.
-     * @deny (write) Any client-side request. Roles are managed via Admin SDK/Console.
-     * @principle Implementation of Database-wide RBAC.
-     */
-    match /roles_admin/{adminId} {
-      allow get: if isSignedIn();
-      allow list: if isAdmin();
-      allow create, update, delete: if false; // Managed by backend/admin only
-    }
-
-    /**
-     * @description Rules for the root User profile document.
+     * @description Rules for user profile documents. Controls access to the root of the user's data tree.
      * @path /users/{userId}
-     * @allow (create) User creating their own profile if ID matches auth.uid.
-     * @deny (update) Attempting to change the internal ID field.
-     * @principle Self-creation and ownership verification.
+     * @allow Authenticated user with matching UID (get, list, create, update).
+     * @deny Any user attempting to access or modify a profile that is not their own.
+     * @principle Enforces self-creation and strict ownership for the root user entity.
      */
     match /users/{userId} {
-      allow get, list: if isOwner(userId) || isAdmin();
+      allow get, list: if isOwner(userId);
       allow create: if isOwner(userId) && request.resource.data.id == userId;
-      allow update: if (isExistingOwner(userId) && isUnchanged('id')) || isAdmin();
-      allow delete: if isAdmin(); // Users usually cannot delete their own root profile in this app
-    }
-
-    /**
-     * @description Rules for AccountTypes, Accounts, and TransactionCategories.
-     * @path /users/{userId}/{collection}/{docId}
-     * @allow (list) The owner listing their own configuration categories.
-     * @deny (create) Mismatched userId in the document body vs the path.
-     * @principle Authorization Independence via denormalized userId.
-     */
-    match /users/{userId}/accountTypes/{id} {
-      allow get, list: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId) && matchesPath(userId);
-      allow update: if (isExistingOwner(userId) && isUnchanged('userId')) || isAdmin();
-      allow delete: if isExistingOwner(userId) || isAdmin();
-    }
-
-    match /users/{userId}/accounts/{id} {
-      allow get, list: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId) && matchesPath(userId);
-      allow update: if (isExistingOwner(userId) && isUnchanged('userId')) || isAdmin();
-      allow delete: if isExistingOwner(userId) || isAdmin();
-    }
-
-    match /users/{userId}/transactionCategories/{id} {
-      allow get, list: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId) && matchesPath(userId);
-      allow update: if (isExistingOwner(userId) && isUnchanged('userId')) || isAdmin();
-      allow delete: if isExistingOwner(userId) || isAdmin();
-    }
-
-    /**
-     * @description Rules for financial Transactions.
-     * @path /users/{userId}/transactions/{transactionId}
-     * @allow (create) Owner creating a transaction with their ID and a valid account reference.
-     * @deny (update) Modifying the owner of a transaction.
-     * @principle Relational integrity between path and document data.
-     */
-    match /users/{userId}/transactions/{transactionId} {
-      allow get, list: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId) && matchesPath(userId);
-      allow update: if (isExistingOwner(userId) && isUnchanged('userId')) || isAdmin();
-      allow delete: if isExistingOwner(userId) || isAdmin();
+      allow update: if isExistingOwner(userId) && request.resource.data.id == resource.data.id;
+      allow delete: if false; // User accounts are typically deactivated, not deleted via client.
 
       /**
-       * @description Rules for file attachments linked to specific transactions.
-       * @path /users/{userId}/transactions/{transactionId}/attachments/{attachmentId}
-       * @allow (create) Owner attaching a file with correct userId and transactionId.
-       * @deny (list) Accessing attachments if not the owner of the parent transaction.
-       * @principle Hierarchical path consistency and ownership.
+       * @description Rules for user-defined account types (e.g., 'Checking', 'Savings').
+       * @path /users/{userId}/account_types/{accountTypeId}
+       * @allow Owner of the parent userId path (all operations).
+       * @deny Non-owners or unauthenticated users.
+       * @principle Path-based multi-tenancy combined with internal userId validation.
        */
-      match /attachments/{attachmentId} {
-        allow get, list: if isOwner(userId) || isAdmin();
-        allow create: if isOwner(userId) 
-                      && matchesPath(userId) 
-                      && request.resource.data.transactionId == transactionId;
-        allow update: if (isExistingOwner(userId) 
-                      && isUnchanged('userId') 
-                      && isUnchanged('transactionId')) || isAdmin();
-        allow delete: if isExistingOwner(userId) || isAdmin();
+      match /account_types/{accountTypeId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+        allow delete: if isExistingOwner(userId);
       }
+
+      /**
+       * @description Rules for financial accounts belonging to a user.
+       * @path /users/{userId}/accounts/{accountId}
+       * @allow Owner of the parent userId path (all operations).
+       * @deny Cross-user access or unauthenticated access.
+       * @principle Validates that the internal ownership field matches the path multi-tenancy.
+       */
+      match /accounts/{accountId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+        allow delete: if isExistingOwner(userId);
+
+        /**
+         * @description Rules for transactions nested under a specific account.
+         * @path /users/{userId}/accounts/{accountId}/transactions/{transactionId}
+         * @allow Owner of the account and user path (all operations).
+         * @deny Users trying to write transactions to an account they don't own.
+         * @principle Enforces relational integrity between the transaction, its parent account, and the user.
+         */
+        match /transactions/{transactionId} {
+          allow get, list: if isOwner(userId);
+          allow create: if isOwner(userId) && request.resource.data.userId == userId && request.resource.data.accountId == accountId;
+          allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId && request.resource.data.accountId == resource.data.accountId;
+          allow delete: if isExistingOwner(userId);
+
+          /**
+           * @description Rules for metadata about file attachments (receipts/invoices).
+           * @path /users/{userId}/accounts/{accountId}/transactions/{transactionId}/attachments/{attachmentId}
+           * @allow Owner of the parent transaction and user path.
+           * @deny Any access that breaks the chain of ownership from user -> account -> transaction.
+           * @principle Deeply nested path authorization combined with denormalized owner validation.
+           */
+          match /attachments/{attachmentId} {
+            allow get, list: if isOwner(userId);
+            allow create: if isOwner(userId) && request.resource.data.userId == userId && request.resource.data.transactionId == transactionId;
+            allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId && request.resource.data.transactionId == resource.data.transactionId;
+            allow delete: if isExistingOwner(userId);
+          }
+        }
+      }
+
+      /**
+       * @description Rules for user-defined categories for income and expenses.
+       * @path /users/{userId}/transaction_categories/{transactionCategoryId}
+       * @allow Owner of the parent userId path (all operations).
+       * @deny Unauthenticated users or users accessing other people's categories.
+       * @principle Enforces owner-only management of classification metadata.
+       */
+      match /transaction_categories/{transactionCategoryId} {
+        allow get, list: if isOwner(userId);
+        allow create: if isOwner(userId) && request.resource.data.userId == userId;
+        allow update: if isExistingOwner(userId) && request.resource.data.userId == resource.data.userId;
+        allow delete: if isExistingOwner(userId);
+      }
+    }
+
+    /**
+     * @description System collection for administrative roles. Uses 'Existence over Content'.
+     * @path /roles_admin/{userId}
+     * @allow Any authenticated user can 'get' to check for admin status; no client-side listing.
+     * @deny Client-side creation, update, or deletion of admin roles.
+     * @principle Administrative privileges are managed outside the client-facing application logic.
+     */
+    match /roles_admin/{userId} {
+      allow get: if isSignedIn();
+      allow list: if isAdmin();
+      allow create, update, delete: if false; // Roles must be assigned via Admin SDK or Console.
     }
   }
 }

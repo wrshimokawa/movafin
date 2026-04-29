@@ -4,20 +4,24 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "User",
       "type": "object",
-      "description": "Represents an individual user of the MovaFin application, serving as a tenant for all associated financial data. Authentication is handled externally.",
+      "description": "Represents a user of the MovaFin application, primarily for managing multi-tenancy and linking financial data. User authentication details are managed by an external system.",
       "properties": {
         "id": {
           "type": "string",
           "description": "Unique identifier for the User entity."
         },
-        "email": {
+        "externalAuthId": {
           "type": "string",
-          "description": "The user's email address, used for identification. Not for authentication.",
-          "format": "email"
+          "description": "Unique identifier from the external authentication system that corresponds to this user."
         },
         "name": {
           "type": "string",
-          "description": "The full name or display name of the user."
+          "description": "The display name of the user."
+        },
+        "email": {
+          "type": "string",
+          "description": "The email address of the user.",
+          "format": "email"
         },
         "createdAt": {
           "type": "string",
@@ -32,8 +36,9 @@
       },
       "required": [
         "id",
-        "email",
+        "externalAuthId",
         "name",
+        "email",
         "createdAt",
         "updatedAt"
       ]
@@ -42,23 +47,23 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "AccountType",
       "type": "object",
-      "description": "Defines a customizable category or type for financial accounts (e.g., Checking, Savings, Cash). Users can manage their own list of account types.",
+      "description": "Defines a customizable type for financial accounts (e.g., 'Checking', 'Savings', 'Cash'). These types can be edited by individual users.",
       "properties": {
         "id": {
           "type": "string",
           "description": "Unique identifier for the AccountType entity."
         },
-        "userId": {
-          "type": "string",
-          "description": "Reference to the User who owns this account type. (Relationship: User 1:N AccountType)"
-        },
         "name": {
           "type": "string",
-          "description": "The name of the account type (e.g., 'Conta Corrente', 'Poupança', 'Carteira')."
+          "description": "The name of the account type (e.g., 'Conta Corrente', 'Poupança')."
         },
         "description": {
           "type": "string",
-          "description": "An optional, more detailed description of the account type."
+          "description": "A detailed description of the account type."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this custom account type. (Relationship: User 1:N AccountType)"
         },
         "createdAt": {
           "type": "string",
@@ -73,8 +78,8 @@
       },
       "required": [
         "id",
-        "userId",
         "name",
+        "userId",
         "createdAt",
         "updatedAt"
       ]
@@ -83,35 +88,39 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Account",
       "type": "object",
-      "description": "Represents a user's financial account (e.g., bank account, cash wallet) where transactions are recorded.",
+      "description": "Represents a single financial account belonging to a user, such as a checking, savings, or cash account.",
       "properties": {
         "id": {
           "type": "string",
           "description": "Unique identifier for the Account entity."
         },
-        "userId": {
-          "type": "string",
-          "description": "Reference to the User who owns this account. (Relationship: User 1:N Account)"
-        },
-        "accountTypeId": {
-          "type": "string",
-          "description": "Reference to the AccountType that classifies this account. (Relationship: AccountType 1:N Account)"
-        },
         "name": {
           "type": "string",
-          "description": "A user-defined name for the account (e.g., 'Minha Conta Principal', 'Cartão de Crédito')."
-        },
-        "initialBalance": {
-          "type": "number",
-          "description": "The starting balance of the account when it was first created."
+          "description": "The user-defined name for this financial account (e.g., 'Minha Conta Principal')."
         },
         "description": {
           "type": "string",
-          "description": "An optional, more detailed description of the account."
+          "description": "An optional description for the account."
         },
-        "isActive": {
-          "type": "boolean",
-          "description": "Indicates whether the account is currently active and in use."
+        "initialBalance": {
+          "type": "number",
+          "description": "The initial monetary balance of the account when it was created."
+        },
+        "currentBalance": {
+          "type": "number",
+          "description": "The current monetary balance of the account."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency code of the account (e.g., 'BRL', 'USD')."
+        },
+        "accountTypeId": {
+          "type": "string",
+          "description": "Reference to the AccountType classifying this account. (Relationship: AccountType 1:N Account)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this account. (Relationship: User 1:N Account)"
         },
         "createdAt": {
           "type": "string",
@@ -126,11 +135,12 @@
       },
       "required": [
         "id",
-        "userId",
-        "accountTypeId",
         "name",
         "initialBalance",
-        "isActive",
+        "currentBalance",
+        "currency",
+        "accountTypeId",
+        "userId",
         "createdAt",
         "updatedAt"
       ]
@@ -139,28 +149,27 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "TransactionCategory",
       "type": "object",
-      "description": "Defines a customizable category for classifying financial transactions as either income or expense. Users can manage their own categories.",
+      "description": "Defines a customizable category for financial transactions (e.g., 'Food', 'Salary'). These categories can be edited by individual users.",
       "properties": {
         "id": {
           "type": "string",
           "description": "Unique identifier for the TransactionCategory entity."
         },
-        "userId": {
-          "type": "string",
-          "description": "Reference to the User who owns this transaction category. (Relationship: User 1:N TransactionCategory)"
-        },
         "name": {
           "type": "string",
-          "description": "The name of the category (e.g., 'Salário', 'Aluguel', 'Transporte', 'Lazer')."
-        },
-        "type": {
-          "type": "string",
-          "description": "The nature of the category, indicating if it's primarily for 'Income' or 'Expense' transactions.",
-          "format": "enum"
+          "description": "The name of the transaction category (e.g., 'Alimentação', 'Transporte')."
         },
         "description": {
           "type": "string",
-          "description": "An optional, more detailed description of the category."
+          "description": "A detailed description of the transaction category."
+        },
+        "type": {
+          "type": "string",
+          "description": "The general type of the category, either 'income' or 'expense'."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the User who owns this custom transaction category. (Relationship: User 1:N TransactionCategory)"
         },
         "createdAt": {
           "type": "string",
@@ -175,9 +184,9 @@
       },
       "required": [
         "id",
-        "userId",
         "name",
         "type",
+        "userId",
         "createdAt",
         "updatedAt"
       ]
@@ -186,41 +195,40 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Transaction",
       "type": "object",
-      "description": "Records a single financial movement, either an income (entrada) or an expense (saída), associated with a specific account and category.",
+      "description": "Records individual financial movements, categorized as either an income or an expense, linked to a specific account.",
       "properties": {
         "id": {
           "type": "string",
           "description": "Unique identifier for the Transaction entity."
         },
-        "userId": {
+        "amount": {
+          "type": "number",
+          "description": "The monetary value of the transaction. Should always be stored as a positive value, with the 'type' field indicating if it's income or expense."
+        },
+        "type": {
           "type": "string",
-          "description": "Reference to the User who owns this transaction. (Relationship: User 1:N Transaction)"
+          "description": "Indicates if the transaction is an 'income' or an 'expense'."
+        },
+        "description": {
+          "type": "string",
+          "description": "User-provided notes or observations about the transaction."
+        },
+        "transactionDate": {
+          "type": "string",
+          "description": "The date and time when the transaction occurred.",
+          "format": "date-time"
         },
         "accountId": {
           "type": "string",
-          "description": "Reference to the Account where this transaction occurred. (Relationship: Account 1:N Transaction)"
+          "description": "Reference to the Account to which this transaction belongs. (Relationship: Account 1:N Transaction)"
         },
         "transactionCategoryId": {
           "type": "string",
           "description": "Reference to the TransactionCategory that classifies this transaction. (Relationship: TransactionCategory 1:N Transaction)"
         },
-        "date": {
+        "userId": {
           "type": "string",
-          "description": "The date and time when the transaction occurred.",
-          "format": "date-time"
-        },
-        "amount": {
-          "type": "number",
-          "description": "The monetary value of the transaction. Positive for income, negative for expense."
-        },
-        "description": {
-          "type": "string",
-          "description": "Optional notes or a detailed description of the transaction."
-        },
-        "type": {
-          "type": "string",
-          "description": "The type of transaction: 'Income' (entrada) or 'Expense' (saída).",
-          "format": "enum"
+          "description": "Reference to the User who owns this transaction. (Relationship: User 1:N Transaction)"
         },
         "createdAt": {
           "type": "string",
@@ -235,12 +243,13 @@
       },
       "required": [
         "id",
-        "userId",
-        "accountId",
-        "transactionCategoryId",
-        "date",
         "amount",
         "type",
+        "description",
+        "transactionDate",
+        "accountId",
+        "transactionCategoryId",
+        "userId",
         "createdAt",
         "updatedAt"
       ]
@@ -249,36 +258,36 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "Attachment",
       "type": "object",
-      "description": "Represents a file (e.g., receipt, invoice) attached to a financial transaction.",
+      "description": "Stores metadata about files attached to transactions, such as receipts or invoices.",
       "properties": {
         "id": {
           "type": "string",
           "description": "Unique identifier for the Attachment entity."
         },
-        "userId": {
+        "filename": {
           "type": "string",
-          "description": "Reference to the User who owns this attachment. (Relationship: User 1:N Attachment)"
+          "description": "The original filename of the attached file."
+        },
+        "url": {
+          "type": "string",
+          "description": "The URL where the attached file is stored (e.g., in cloud storage).",
+          "format": "uri"
+        },
+        "mimeType": {
+          "type": "string",
+          "description": "The MIME type of the attached file (e.g., 'image/jpeg', 'application/pdf')."
+        },
+        "fileSize": {
+          "type": "number",
+          "description": "The size of the attached file in bytes."
         },
         "transactionId": {
           "type": "string",
           "description": "Reference to the Transaction this attachment belongs to. (Relationship: Transaction 1:N Attachment)"
         },
-        "fileName": {
+        "userId": {
           "type": "string",
-          "description": "The original name of the attached file."
-        },
-        "fileType": {
-          "type": "string",
-          "description": "The MIME type of the attached file (e.g., 'image/jpeg', 'application/pdf')."
-        },
-        "fileUrl": {
-          "type": "string",
-          "description": "The URI or path where the attached file is stored.",
-          "format": "uri"
-        },
-        "description": {
-          "type": "string",
-          "description": "An optional description or context for the attachment."
+          "description": "Reference to the User who owns this attachment. (Relationship: User 1:N Attachment)"
         },
         "uploadedAt": {
           "type": "string",
@@ -288,11 +297,12 @@
       },
       "required": [
         "id",
-        "userId",
+        "filename",
+        "url",
+        "mimeType",
+        "fileSize",
         "transactionId",
-        "fileName",
-        "fileType",
-        "fileUrl",
+        "userId",
         "uploadedAt"
       ]
     }
@@ -312,23 +322,23 @@
           "schema": {
             "$ref": "#/backend/entities/User"
           },
-          "description": "Root collection for user profiles. Each document represents a MovaFin user and is identified by their Firebase Authentication UID. Authorization relies on `request.auth.uid` matching `userId` in the path.",
+          "description": "Top-level collection for user profiles. Each document ID corresponds to the Firebase Authentication UID. This is the root for all user-specific data.",
           "params": [
             {
               "name": "userId",
-              "description": "The unique identifier (Firebase Auth UID) of the user."
+              "description": "The unique identifier of the user, matching `request.auth.uid`."
             }
           ]
         }
       },
       {
-        "path": "/users/{userId}/accountTypes/{accountTypeId}",
+        "path": "/users/{userId}/account_types/{accountTypeId}",
         "definition": {
           "entityName": "AccountType",
           "schema": {
             "$ref": "#/backend/entities/AccountType"
           },
-          "description": "Subcollection for customizable account types owned by a specific user. Includes denormalized 'userId' field for authorization independence, ensuring `request.auth.uid` matches `resource.data.userId`.",
+          "description": "Subcollection for user-defined account types. Each document includes the denormalized 'userId' field for authorization independence.",
           "params": [
             {
               "name": "userId",
@@ -336,7 +346,7 @@
             },
             {
               "name": "accountTypeId",
-              "description": "The unique identifier for the account type."
+              "description": "The unique identifier for the custom account type."
             }
           ]
         }
@@ -348,7 +358,7 @@
           "schema": {
             "$ref": "#/backend/entities/Account"
           },
-          "description": "Subcollection for financial accounts owned by a specific user. Includes denormalized 'userId' field for authorization independence, ensuring `request.auth.uid` matches `resource.data.userId`.",
+          "description": "Subcollection for user's financial accounts. Each document includes the denormalized 'userId' field for authorization independence.",
           "params": [
             {
               "name": "userId",
@@ -362,13 +372,13 @@
         }
       },
       {
-        "path": "/users/{userId}/transactionCategories/{transactionCategoryId}",
+        "path": "/users/{userId}/transaction_categories/{transactionCategoryId}",
         "definition": {
           "entityName": "TransactionCategory",
           "schema": {
             "$ref": "#/backend/entities/TransactionCategory"
           },
-          "description": "Subcollection for customizable transaction categories (income/expense) owned by a specific user. Includes denormalized 'userId' field for authorization independence, ensuring `request.auth.uid` matches `resource.data.userId`.",
+          "description": "Subcollection for user-defined transaction categories. Each document includes the denormalized 'userId' field for authorization independence.",
           "params": [
             {
               "name": "userId",
@@ -376,72 +386,80 @@
             },
             {
               "name": "transactionCategoryId",
-              "description": "The unique identifier for the transaction category."
+              "description": "The unique identifier for the custom transaction category."
             }
           ]
         }
       },
       {
-        "path": "/users/{userId}/transactions/{transactionId}",
+        "path": "/users/{userId}/accounts/{accountId}/transactions/{transactionId}",
         "definition": {
           "entityName": "Transaction",
           "schema": {
             "$ref": "#/backend/entities/Transaction"
           },
-          "description": "Subcollection for individual financial transactions owned by a specific user. Includes denormalized 'userId', 'accountId', and 'transactionCategoryId' fields for authorization independence and queryability.",
+          "description": "Nested subcollection for transactions belonging to a specific account, owned by a user. Each document includes denormalized 'userId' and 'accountId' fields for authorization independence.",
           "params": [
             {
               "name": "userId",
               "description": "The unique identifier of the user who owns this transaction."
             },
             {
+              "name": "accountId",
+              "description": "The unique identifier of the account to which this transaction belongs."
+            },
+            {
               "name": "transactionId",
-              "description": "The unique identifier for the transaction."
+              "description": "The unique identifier for the transaction record."
             }
           ]
         }
       },
       {
-        "path": "/users/{userId}/transactions/{transactionId}/attachments/{attachmentId}",
+        "path": "/users/{userId}/accounts/{accountId}/transactions/{transactionId}/attachments/{attachmentId}",
         "definition": {
           "entityName": "Attachment",
           "schema": {
             "$ref": "#/backend/entities/Attachment"
           },
-          "description": "Nested subcollection for file attachments associated with a specific transaction. Includes denormalized 'userId' and 'transactionId' for authorization independence, ensuring `request.auth.uid` matches `resource.data.userId` and `transactionId` matches the parent transaction.",
+          "description": "Deeply nested subcollection for attachments linked to a specific transaction, account, and user. Each document includes denormalized 'userId' and 'transactionId' fields for authorization independence.",
           "params": [
             {
               "name": "userId",
-              "description": "The unique identifier of the user who owns the parent transaction and this attachment."
+              "description": "The unique identifier of the user who owns this attachment."
+            },
+            {
+              "name": "accountId",
+              "description": "The unique identifier of the account associated with the parent transaction."
             },
             {
               "name": "transactionId",
-              "description": "The unique identifier of the parent transaction this attachment belongs to."
+              "description": "The unique identifier of the transaction to which this attachment belongs."
             },
             {
               "name": "attachmentId",
-              "description": "The unique identifier for the attachment."
+              "description": "The unique identifier for the attachment record."
             }
           ]
         }
       },
       {
-        "path": "/roles_admin/{adminId}",
+        "path": "/roles_admin/{userId}",
         "definition": {
-          "entityName": "Admin",
+          "entityName": "AdminRole",
           "schema": {
             "$ref": "#/backend/entities/User"
           },
-          "description": "A top-level collection for storing administrator roles (DBAC). The document ID is the UID of an authenticated user. Existence of a document here grants administrative privileges across the application for data viewing and management. Documents can be empty or contain simple audit fields.",
+          "description": "Top-level collection for administrative roles. The existence of a document with a user's UID in this collection grants them administrative privileges. This uses 'Existence over Content' for DBAC.",
           "params": [
             {
-              "name": "adminId",
-              "description": "The unique identifier (Firebase Auth UID) of an administrator user."
+              "name": "userId",
+              "description": "The unique identifier of the user who has admin privileges."
             }
           ]
         }
       }
     ],
-    "reasoning": "The Firestore data structure for MovaFin is designed with a strong emphasis on multi-tenancy, security, and scalability, adhering strictly to the core design principles:\n\n1.  **Authorization Independence (CRITICAL):** Every document in a user-specific subcollection (e.g., AccountType, Account, TransactionCategory, Transaction, Attachment) explicitly includes the `userId` field. This denormalization means that security rules can evaluate access requests based solely on the `request.auth.uid` matching the `resource.data.userId` without needing to perform `get()` operations on parent documents. This approach is fundamental for supporting atomic operations (transactions, batches) and greatly simplifies rule debugging by removing complex hierarchical dependencies.\n\n2.  **QAPs (Rules are not Filters):** The structure inherently supports Queryable Access Patterns (QAPs) through **Structural Segregation** and **Authorization Independence**. All user-specific data is strictly segregated under the `/users/{userId}` path. For example, a user requesting their accounts will query `/users/{request.auth.uid}/accounts`. The security rules will simply check if `request.auth.uid == resource.data.userId` (which is also derived from the path `userId`). This ensures that `list` operations are implicitly secure, as a user can only query within their dedicated data path. For administrators, a dedicated `/roles_admin/{adminId}` collection provides clear DBAC. An admin's presence in this collection allows them to `list` all `/users` documents and then `read` any subcollection for any user, enabling `list` operations across user data without violating QAPs, as the rule for admins will explicitly grant this broader access based on their role existence.\n\n3.  **Structural Segregation:** All data belonging to a specific user (AccountTypes, Accounts, TransactionCategories, Transactions, and their Attachments) resides within subcollections under `/users/{userId}/...`. This ensures that all documents within a given collection path share a homogeneous security posture: they are owned by the `userId` specified in the path and the document's `userId` field. This prevents mixing public and private data or data with different access requirements in the same collection, making security rules simpler and more explicit.\n\n4.  **Access Modeling:**\n    *   **Private Data:** All user financial data is private, secured using path-based ownership (`/users/{userId}/...`).\n    *   **Hierarchical Paths:** `User 1:N Entity` relationships (User to AccountType, Account, TransactionCategory, Transaction) are modeled using hierarchical paths like `/users/{userId}/accountTypes/{accountTypeId}`. This is a secure and efficient way to manage user-owned data.\n    *   **Nested Hierarchy:** `Transaction 1:N Attachment` is further nested under transactions: `/users/{userId}/transactions/{transactionId}/attachments/{attachmentId}`, while still maintaining `userId` and `transactionId` denormalized within the `Attachment` document for authorization independence.\n    *   **Global Roles (DBAC):** The `/roles_admin/{adminId}` collection implements role-based access control. An `adminId` matching `request.auth.uid` grants elevated permissions.\n\nThis architecture provides a robust, secure, and easily debuggable foundation for MovaFin, ensuring that each user's financial data is isolated and protected, while also enabling controlled administrator access."
+    "reasoning": "The Firestore structure is designed to be secure, scalable, and debuggable, strictly adhering to the core design principles and strategy mandates. \n\n**Authorization Independence (CRITICAL) and QAPs (Rules are not Filters):**\n1.  \n    **Path-Based Multi-Tenancy:** All user-specific data (Account Types, Accounts, Transaction Categories, Transactions, and Attachments) is nested directly under a user's document using the path `/users/{userId}/...`. This automatically enforces multi-tenancy, as `request.auth.uid` must match the `{userId}` in the path for any access, ensuring users only interact with their own data. This design is crucial for QAPs, as `list` operations on these collections (e.g., `/users/{request.auth.uid}/accounts`) are inherently secure and don't require server-side filtering after fetching. \n2.  \n    **Denormalization of Ownership:** Every document within these user-specific subcollections (AccountType, Account, TransactionCategory, Transaction, Attachment) explicitly includes the `userId` field. This denormalization is the cornerstone of Authorization Independence. It eliminates the need for expensive and complex `get()` calls in security rules to check ownership against a parent document. For example, to verify ownership of an `Account`, the rule can directly check `resource.data.userId == request.auth.uid` in addition to `request.path[1] == request.auth.uid`. This makes rules atomic, performant, and easy to debug, while also enabling atomic write operations (transactions/batches) without breaking security checks.\n\n**Structural Segregation & Access Modeling:**\n*   User-owned entities are segregated into their own subcollections (e.g., `/users/{userId}/accounts`). Each subcollection maintains a homogeneous security posture: all documents within it are owned by the parent `userId` and have similar access patterns.\n*   Global roles for administrators are handled via a dedicated top-level collection, `/roles_admin/{userId}`. This follows the \"Existence over Content\" principle, where the presence of a document with the user's UID signifies administrative privileges, enabling simple and efficient DBAC without custom claims.\n\n**Data Clarity and Consistency:**\n*   Wildcards are semantically named (e.g., `{userId}`, `{accountId}`, `{transactionId}`) for clarity.\n*   Authorization fields are standardized (`userId`).\n*   Explicit state modeling is used for transaction types (`type: 'income' | 'expense'`).\n\nThis architecture prioritizes security, scalability, and maintainability by leveraging Firestore's hierarchical nature for multi-tenancy and employing strategic denormalization to simplify security rules and enhance performance."
   }
 }
