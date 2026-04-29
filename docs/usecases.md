@@ -14,15 +14,15 @@ Este documento detalha os casos de uso da aplicação MovaFin, descrevendo as in
 ### UC-01: Gerenciar Autenticação
 - **Atores:** Usuário Não Autenticado, Usuário Autenticado, Administrador
 - **Resumo:** Permite que um usuário crie uma nova conta, acesse uma conta existente ou encerre sua sessão no sistema.
-- **Pré-condições:** Nenhuma para Cadastro e Login. Para acesso administrativo, o usuário deve ter sido previamente promovido a Administrador por um processo de governança interno.
+- **Pré-condições:** Nenhuma para Cadastro e Login. Para acesso administrativo, o usuário deve ter sido previamente promovido a Administrador por um processo de governança manual/interno (Custom Claims).
 - **Fluxo Principal (Login):**
     1. O Usuário acessa a página de "Login".
     2. O Usuário preenche os campos "Email" e "Senha".
     3. O Usuário clica no botão "Entrar".
     4. O Sistema valida as credenciais.
-    5. O Sistema verifica as permissões do usuário.
+    5. O Sistema verifica as permissões do usuário no token de acesso.
     6. Se for um usuário comum, redireciona para o "Dashboard" padrão.
-    7. Se possuir a flag de administrador, habilita o acesso ao menu "Admin" e redireciona conforme preferência.
+    7. Se possuir o atributo de administrador (Custom Claim), habilita o acesso ao menu "Admin" e redireciona conforme preferência.
 - **Pós-condição:** O usuário está autenticado e tem acesso ao seu perfil e funcionalidades permitidas.
 
 ### UC-02: Gerenciar Contas Financeiras
@@ -66,7 +66,7 @@ Este documento detalha os casos de uso da aplicação MovaFin, descrevendo as in
 ### UC-07: Acessar Painel Administrativo
 - **Atores:** Administrador
 - **Resumo:** Permite que um administrador visualize métricas de uso da plataforma.
-- **Pré-condições:** O usuário deve possuir Custom Claims de 'admin' no seu token de autenticação.
+- **Pré-condições:** O usuário deve possuir Custom Claims de 'admin' no seu token de autenticação, atribuídos manualmente por um processo de governança.
 - **Fluxo Principal:**
     1. O Administrador acessa a rota `/admin` ou clica no atalho no menu.
     2. O sistema valida os privilégios.

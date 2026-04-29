@@ -1,3 +1,4 @@
+
 # Cronograma de Desenvolvimento - MovaFin
 
 Este documento apresenta o cronograma de desenvolvimento do MovaFin, atualizado conforme as especificações detalhadas e o protótipo de alta fidelidade já construídos.
@@ -42,6 +43,6 @@ Este documento apresenta o cronograma de desenvolvimento do MovaFin, atualizado 
 - **Objetivo:** Implementar o acesso restrito e finalizar a aplicação.
 - **Tarefas:**
     - Implementação do Painel Administrativo com dados agregados (RF-021).
-    - Configuração de Custom Claims para o papel de Administrador (RF-023).
+    - Configuração manual de Custom Claims para o primeiro usuário Administrador (RF-023).
     - Revisão final de acessibilidade e performance (RN-001, RN-002).
     - Deploy final e homologação.
