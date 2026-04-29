@@ -9,6 +9,7 @@ Este documento detalha os requisitos funcionais da aplicação MovaFin.
 - **RF-002: Login de Usuário:** O sistema deve permitir que um usuário existente faça login usando seu e-mail and senha.
 - **RF-003: Sessão Segura:** O sistema deve manter a sessão do usuário de forma segura.
 - **RF-004: Isolamento de Dados:** Os dados de cada usuário devem ser estritamente isolados.
+- **RF-023: Identificação de Administrador:** O sistema deve identificar usuários com privilégios administrativos através de atributos seguros (Custom Claims ou flags no banco de dados) atribuídos manualmente por um super-usuário ou processo interno.
 
 ## 2. Gestão de Contas Financeiras
 
@@ -43,3 +44,7 @@ Este documento detalha os requisitos funcionais da aplicação MovaFin.
 ## 7. Gestão de Metas
 
 - **RF-019: Criação de Metas:** O usuário deve poder criar metas financeiras.
+
+## 8. Administração (Acesso Restrito)
+
+- **RF-021: Painel Administrativo:** Acesso exclusivo para usuários com perfil de administrador para visualização de métricas agregadas e saúde da plataforma.

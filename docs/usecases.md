@@ -12,16 +12,18 @@ Este documento detalha os casos de uso da aplicação MovaFin, descrevendo as in
 ## Especificação dos Casos de Uso
 
 ### UC-01: Gerenciar Autenticação
-- **Atores:** Usuário Não Autenticado, Usuário Autenticado
+- **Atores:** Usuário Não Autenticado, Usuário Autenticado, Administrador
 - **Resumo:** Permite que um usuário crie uma nova conta, acesse uma conta existente ou encerre sua sessão no sistema.
-- **Pré-condições:** Nenhuma.
+- **Pré-condições:** Nenhuma para Cadastro e Login. Para acesso administrativo, o usuário deve ter sido previamente promovido a Administrador por um processo de governança interno.
 - **Fluxo Principal (Login):**
     1. O Usuário acessa a página de "Login".
     2. O Usuário preenche os campos "Email" e "Senha".
     3. O Usuário clica no botão "Entrar".
     4. O Sistema valida as credenciais.
-    5. O Sistema estabelece uma sessão segura e redireciona o Usuário para o "Dashboard".
-- **Pós-condição:** O usuário está autenticado e tem acesso ao seu perfil.
+    5. O Sistema verifica as permissões do usuário.
+    6. Se for um usuário comum, redireciona para o "Dashboard" padrão.
+    7. Se possuir a flag de administrador, habilita o acesso ao menu "Admin" e redireciona conforme preferência.
+- **Pós-condição:** O usuário está autenticado e tem acesso ao seu perfil e funcionalidades permitidas.
 
 ### UC-02: Gerenciar Contas Financeiras
 - **Atores:** Usuário Autenticado
@@ -60,3 +62,14 @@ Este documento detalha os casos de uso da aplicação MovaFin, descrevendo as in
     1. O usuário acessa a página principal (Dashboard).
     2. O sistema exibe o saldo total, resumo do mês e gastos por categoria.
 - **Pós-condição:** O usuário tem uma visão geral de sua saúde financeira.
+
+### UC-07: Acessar Painel Administrativo
+- **Atores:** Administrador
+- **Resumo:** Permite que um administrador visualize métricas de uso da plataforma.
+- **Pré-condições:** O usuário deve possuir Custom Claims de 'admin' no seu token de autenticação.
+- **Fluxo Principal:**
+    1. O Administrador acessa a rota `/admin` ou clica no atalho no menu.
+    2. O sistema valida os privilégios.
+    3. O sistema exibe métricas agregadas (total de usuários, volume de transações, etc.).
+- **Regras de Negócio:**
+    - **RN-05:** Dados individuais dos usuários nunca devem ser expostos ao administrador; apenas dados agregados e anonimizados.
