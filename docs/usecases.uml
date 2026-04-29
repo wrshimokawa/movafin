@@ -1,0 +1,27 @@
+@startuml MovaFin Use Cases
+left to right direction
+skinparam packageStyle rectangle
+
+actor Usuário
+actor Administrador
+
+rectangle MovaFin {
+  Usuário -- (Gerenciar Autenticação)
+  Usuário -- (Gerenciar Contas)
+  Usuário -- (Gerenciar Transações)
+  Usuário -- (Gerenciar Categorias)
+  Usuário -- (Gerenciar Metas)
+  Usuário -- (Consultar Dashboard)
+  Usuário -- (Usar Ferramentas de IA)
+
+  (Gerenciar Autenticação) .> (Cadastrar-se) : <<include>>
+  (Gerenciar Autenticação) .> (Realizar Login) : <<include>>
+
+  (Gerenciar Transações) ..> (Anexar Comprovante) : <<extend>>
+  (Usar Ferramentas de IA) ..> (Explicar Transação) : <<extend>>
+  (Usar Ferramentas de IA) ..> (Sugerir Categoria) : <<extend>>
+  
+  Administrador -- (Visualizar Dados Agregados)
+}
+
+@enduml

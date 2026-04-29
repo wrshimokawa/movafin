@@ -60,6 +60,14 @@ A estrutura de pastas do projeto foi organizada para promover a modularidade e f
 - **`src/ai`**: Onde toda a lógica de Inteligência Artificial com Genkit é definida. Os `flows` são as funções que interagem com os modelos de linguagem.
 - **`docs`**: Toda a documentação do projeto, incluindo requisitos, decisões de arquitetura e cronograma.
 
+## 📄 Documentação Completa
+
+- [Product Requirements Document (PRD)](./docs/PRD.md)
+- [Requisitos Funcionais](./docs/functional-requirements.md)
+- [Casos de Uso](./docs/usecases.md)
+- [Requisitos Não Funcionais](./docs/non-functional-requirements.md)
+- [Cronograma de Desenvolvimento](./docs/cronograma.md)
+
 ## 🏃 Getting Started
 
 Para rodar o projeto localmente:
