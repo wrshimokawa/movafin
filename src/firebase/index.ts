@@ -20,7 +20,6 @@ export function initializeFirebase() {
     const sdks = getSdks(firebaseApp);
 
     // Configuração para uso de emuladores em ambiente de desenvolvimento local
-    // Habilitado via variável de ambiente NEXT_PUBLIC_USE_FIREBASE_EMULATORS=true
     if (process.env.NEXT_PUBLIC_USE_FIREBASE_EMULATORS === 'true') {
       try {
         connectAuthEmulator(sdks.auth, 'http://127.0.0.1:9099');

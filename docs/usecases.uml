@@ -7,32 +7,24 @@ actor "Usuário Autenticado" as User
 actor "Administrador" as Admin
 
 rectangle MovaFin {
-  usecase "UC-01: Gerenciar Autenticação" as UC1
-  usecase "UC-02: Gerenciar Contas Financeiras" as UC2
-  usecase "UC-03: Gerenciar Transações" as UC3
-  usecase "UC-04: Gerenciar Categorias" as UC4
-  usecase "UC-05: Gerenciar Metas Financeiras" as UC5
-  usecase "UC-06: Consultar Dashboard" as UC6
-  usecase "UC-07: Acessar Painel Administrativo" as UC7
+  usecase "UC-01: Gerenciar Autenticação" as UC01
+  usecase "UC-02: Gerenciar Contas" as UC02
+  usecase "UC-03: Gerenciar Transações" as UC03
+  usecase "UC-04: Gerenciar Categorias" as UC04
+  usecase "UC-05: Gerenciar Metas" as UC05
+  usecase "UC-06: Consultar Dashboard" as UC06
+  usecase "UC-07: Acessar Painel Administrativo" as UC07
 }
 
-Guest --> UC1
-User --> UC1
-User --> UC2
-User --> UC3
-User --> UC4
-User --> UC5
-User --> UC6
-Admin --> UC7
+Guest --> UC01
+User --> UC01
+User --> UC02
+User --> UC03
+User --> UC04
+User --> UC05
+User --> UC06
+
 Admin --|> User
+Admin --> UC07
 
-note right of UC3
-  Inclui Sugestão de Categoria e
-  Explicação com IA (Genkit)
-end note
-
-note right of UC7
-  Acesso restrito via
-  Custom Claims/Firestore Flag
-end note
 @enduml
